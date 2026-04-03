@@ -8,34 +8,17 @@
 ###############################################################
 
 {
+  config,
   inputs,
   lib,
   ...
 }:
 {
+  imports = [
+    # include NixOS-WSL modules
+    <nixos-wsl/modules>
+  ]
   imports = lib.flatten [
-    #
-    # ========== Hardware ==========
-    #
-    ./hardware-configuration.nix
-
-    #
-    # ========== Disk Layout ==========
-    #
-    inputs.disko.nixosModules.disko
-    # FIXME(starter): modify with the disko spec file you want to use.
-    (lib.custom.relativeToRoot "hosts/common/disks/btrfs-disk.nix")
-    # FIXME(starter): modify the options below to inform disko of the host's disk path and swap requirements.
-    # IMPORTANT: nix-config-starter assumes a single disk per host. If you require more disks, you
-    # must modify or create new dikso specs.
-    {
-      _module.args = {
-        disk = "/dev/nvme0n1";
-        withSwap = true;
-        swapSize = 16;
-      };
-    }
-
     (map lib.custom.relativeToRoot [
       #
       # ========== Required Configs ==========
@@ -71,8 +54,12 @@
   # more than one host can be declared in `nix-config/hosts/common/core/` see the default.nix file there
   # for examples.
   hostSpec = {
-    hostName = "hostname1";
+    hostName = "nexer-wsl";
   };
+
+
+  wsl.enable = true;
+  wsl.defaultUser = "tryy3";
 
   networking = {
     networkmanager.enable = true;
@@ -94,8 +81,8 @@
   };
 
   hardware.graphics = {
-    enable = true;
+    enable = false;
   };
   # https://wiki.nixos.org/wiki/FAQ/When_do_I_update_stateVersion
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.11";
 }

@@ -15,6 +15,8 @@ in
       "modules/common/host-spec.nix"
       "modules/home"
     ])
+    # TODO: Focus is WSL now but this might be a solution to use same nix for everything
+    # then do special cases between WSL and regular linux, darwin could be ignored
     ./${platform}.nix
 
     # FIXME(starter): add/edit as desired
@@ -35,7 +37,7 @@ in
   home = {
     username = lib.mkDefault config.hostSpec.username;
     homeDirectory = lib.mkDefault config.hostSpec.home;
-    stateVersion = lib.mkDefault "24.11";
+    stateVersion = lib.mkDefault "25.11";
     sessionPath = [
       "$HOME/.local/bin"
     ];

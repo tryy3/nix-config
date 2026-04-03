@@ -39,8 +39,8 @@ in
   # FIXME(starter): modify the hostSpec options below to define values that are common across all hosts
   # such as the username and handle of the primary user (see also `nix-config/hosts/common/users/primary`)
   hostSpec = {
-    username = "hiro";
-    handle = "hiroprotagonist";
+    username = "tryy3";
+    handle = "tryy3";
     # FIXME(starter): modify the attribute sets hostSpec will inherit from your nix-secrets.
     # If you're not using nix-secrets then remove the following six lines below.
     inherit (inputs.nix-secrets)

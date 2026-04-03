@@ -18,4 +18,22 @@
         ) (builtins.readDir path)
       )
     );
+  # Like scanPaths but filters out platform-specific files (darwin.nix / nixos.nix)
+  # that don't match the current platform
+  scanPathsFilterPlatform =
+    path:
+    builtins.map (f: (path + "/${f}")) (
+      builtins.attrNames (
+        lib.attrsets.filterAttrs (
+          name: _type:
+          (_type == "directory") # include directories
+          || (
+            (name != "default.nix") # ignore default.nix
+            && (name != "darwin.nix") # exclude darwin.nix (imported conditionally)
+            && (name != "nixos.nix") # exclude nixos.nix (imported conditionally)
+            && (lib.strings.hasSuffix ".nix" name) # include .nix files
+          )
+        ) (builtins.readDir path)
+      )
+    );
 }

@@ -16,6 +16,7 @@ in
       "modules/home"
     ])
     (lib.custom.scanPathsFilterPlatform ./.)
+    [ ./${platform}.nix ]
     # TODO: Focus is WSL now but this might be a solution to use same nix for everything
     # then do special cases between WSL and regular linux, darwin could be ignored
     # ./${patform}.nix

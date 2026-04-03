@@ -31,7 +31,7 @@
       enable = true;
     };
     autocd = true;
-    autosuggestions = {
+    autosuggestion = {
       enable = true;
     };
     history = {

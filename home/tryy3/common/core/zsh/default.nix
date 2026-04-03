@@ -10,6 +10,8 @@
   home.packages = [
     pkgs.rmtrash # temporarily cache deleted files for recovery
     pkgs.fzf # fuzzy finder
+    pkgs.fd
+    pkgs.ripgrep
   ];
   programs.zoxide = {
     enable = true;
@@ -18,6 +20,28 @@
     options = [
       "--cmd cd" # replacce cd with z and zi (via cdi)
     ];
+  };
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    defaultCommand = "fd --type f --hiden --follow --exclude .git";
+    defaultOptions = [
+      "--height 40%;"
+      "--border"
+      "--reverse"
+    ];
+  };
+
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      add_newline = true;
+      command_timeout = 1000;
+      directory.truncation_length = 5;
+      git_status.style = "bold red";
+      nix_shell.format = "via [$symbol$state]($style) ";
+    };
   };
 
   #
@@ -36,8 +60,12 @@
       enable = true;
     };
     history = {
-      size = 10000;
+      size = 50000;
+      save = 50000;
       share = true;
+      ignoreDups = true;
+      ignoreSpace = true;
+      extended = true;
     };
 
     plugins = import ./plugins.nix { inherit pkgs; };
@@ -50,7 +78,9 @@
       # Enabling too many plugins will slowdown shell startup
       plugins = [
         "git"
-        # "sudo" # Press Esc twice to get previous command preffixed with sudo
+        "sudo" # Press Esc twice to get previous command preffixed with sudo
+        "extract"
+        "command-not-found"
       ];
       extraConfig = ''
         # Display red dots whilst waiting for completion.

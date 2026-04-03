@@ -58,6 +58,6 @@
       '';
     };
 
-    shellAliases = import ./aliases.nix { inherit osConfig; };
+    shellAliases = import ./aliases.nix { inherit osConfig; }; # TODO: look at oxConfig from nix-config
   };
 }

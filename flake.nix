@@ -170,7 +170,7 @@
     # FIXME(starter): The url below points to the 'simple' branch of the public, nix-secrets-reference repository which is inherently INSECURE!
     # Replace the url with your personal, private nix-secrets repo.
     nix-secrets = {
-      url = "git+ssh://git@github.com/tryy3/nix-secrets.git?ref=simple&shallow=1";
+      url = "git+https://github.com/tryy3/nix-secrets.git?ref=simple&shallow=1";
       inputs = { };
     };
   };

@@ -103,6 +103,85 @@ After you've set up your variation of nix-config yourself and taken some time to
 
 If there are any specific references you are looking for or that you think should be included here, please do let me know! I can only guess at how you will interpret what I've provided here and providing feedback is critical for ensuring that you and others like you have as smooth a journey as possible.
 
+## Day-to-Day Commands and Workflows
+
+All commands below should be run from inside the `nix-config` directory (where `direnv` loads the shell environment).
+
+### Quick Reference
+
+| Command | What it does |
+|---|---|
+| `just` | List all available recipes |
+| `just rebuild` | Rebuild and switch to the current config |
+| `just rebuild-update` | Update all flake inputs, then rebuild |
+| `just rebuild-full` | Rebuild and run a full flake check |
+| `just rebuild-trace` | Rebuild with `--show-trace` for debugging |
+| `just check` | Run flake checks without rebuilding |
+| `just diff` | Show git diff excluding `flake.lock` |
+| `just update` | Update `flake.lock` without rebuilding |
+
+### Adding a New Package
+
+1. Add the package to `home/tryy3/common/core/default.nix` under `home.packages`:
+   ```nix
+   home.packages = builtins.attrValues {
+     inherit (pkgs)
+       my-new-package
+       # ...
+       ;
+   };
+   ```
+2. Optionally add shell aliases in `home/tryy3/common/core/bash.nix`:
+   ```nix
+   shellAliases = {
+     cat = "bat";
+   };
+   ```
+3. Rebuild: `just rebuild`
+
+### Updating the System
+
+```bash
+# See when each flake input was last updated
+nix flake metadata
+
+# Update all inputs and rebuild
+just rebuild-update
+
+# Or update a single input and rebuild
+nix flake update nixpkgs
+just rebuild
+```
+
+### Searching for Packages
+
+```bash
+# Search nixpkgs for a package
+nix search nixpkgs <package-name>
+```
+
+You can also browse packages at [search.nixos.org/packages](https://search.nixos.org/packages).
+
+### Rolling Back
+
+If a rebuild breaks something, you can switch back to the previous generation:
+
+```bash
+sudo nixos-rebuild switch --rollback
+```
+
+Or pick a specific generation from the boot menu on next restart.
+
+### Checking Build Errors
+
+```bash
+# Rebuild with detailed trace output
+just rebuild-trace
+
+# Run flake checks independently
+just check
+```
+
 ## Guidance and Resources
 
 - Watch NixOS related videos on my [YouTube channel](https://www.youtube.com/@Emergent_Mind).

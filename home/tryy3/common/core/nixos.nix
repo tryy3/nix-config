@@ -4,7 +4,7 @@
   ...
 }:
 {
-  sessionVariables = {
+  home.sessionVariables = {
     SHELL = "zsh";
     VISUAL = "nvim";
     EDITOR = "nvim";

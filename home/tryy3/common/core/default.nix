@@ -47,7 +47,6 @@ in
     ];
     sessionVariables = {
       FLAKE = "$HOME/src/nix/nix-config";
-      SHELL = "bash";
     };
   };
 

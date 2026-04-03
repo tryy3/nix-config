@@ -44,10 +44,6 @@
   #   src = "${pkgs.introdus.zsh-talon-folder-completion}/share/zsh/zsh-talon-folder-completion";
   # }
   {
-    name = "zsh-color-ssh-nvim-term";
-    src = "${pkgs.zsh-color-ssh-nvim-term}/share/zsh/zsh-color-ssh-nvim-term";
-  }
-  {
     name = "zsh-edit";
     src = "${pkgs.zsh-edit}/share/zsh/zsh-edit";
   }

@@ -1,7 +1,7 @@
 #NOTE(starter): custom functions added here are available via `lib.custom.foo` by passing `lib` into
 # the expression parameters. The two functions below are used by `nix-config` and should not be modified.
 { lib, ... }:
-{
+rec {
   # use path relative to the root of the project
   relativeToRoot = lib.path.append ../.;
   scanPaths =

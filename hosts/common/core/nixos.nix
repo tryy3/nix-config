@@ -34,6 +34,9 @@
   # ========== Localization ==========
   #
   # FIXME(starter): customize localization values as desired.
+  # required for remote tools such as vscode
+  programs.nix-ld.enable = true;
+
   i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
   time.timeZone = lib.mkDefault "Europe/Stockholm";
 }

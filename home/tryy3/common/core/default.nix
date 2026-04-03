@@ -94,9 +94,6 @@ in
 
   programs.home-manager.enable = true;
 
-  # required for remote tools such as vscode
-  programs.nix-ld.enable = true;
-
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 }

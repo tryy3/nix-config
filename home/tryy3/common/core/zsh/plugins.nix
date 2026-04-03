@@ -25,19 +25,19 @@
   }
   {
     name = "zsh-term-title";
-    src = "${pkgs.introdus.zsh-term-title}/share/zsh/zsh-term-title";
+    src = "${pkgs.zsh-term-title}/share/zsh/zsh-term-title";
   }
   {
     name = "cd-gitroot";
-    src = "${pkgs.introdus.cd-gitroot}/share/zsh/cd-gitroot";
+    src = "${pkgs.cd-gitroot}/share/zsh/cd-gitroot";
   }
   {
     name = "zsh-deep-autocd";
-    src = "${pkgs.introdus.zsh-deep-autocd}/share/zsh/zsh-deep-autocd";
+    src = "${pkgs.zsh-deep-autocd}/share/zsh/zsh-deep-autocd";
   }
   {
     name = "zsh-autols";
-    src = "${pkgs.introdus.zsh-autols}/share/zsh/zsh-autols";
+    src = "${pkgs.zsh-autols}/share/zsh/zsh-autols";
   }
   # {
   #   name = "zsh-talon-folder-completion";
@@ -45,7 +45,7 @@
   # }
   {
     name = "zsh-color-ssh-nvim-term";
-    src = "${pkgs.introdus.zsh-color-ssh-nvim-term}/share/zsh/zsh-color-ssh-nvim-term";
+    src = "${pkgs.zsh-color-ssh-nvim-term}/share/zsh/zsh-color-ssh-nvim-term";
   }
   {
     name = "zsh-edit";

@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  osConfig,
   ...
 }:
 {
@@ -57,6 +58,6 @@
       '';
     };
 
-    shellAliases = import ./aliases.nix { }; # TODO: look at oxConfig from nix-config
+    shellAliases = import ./aliases.nix { inherit osConfig; };
   };
 }

@@ -64,6 +64,8 @@
     enableIPv6 = false;
   };
 
+  nixpkgs.hostPlatform = "x86_64-linux";
+
   # WSL doesn't use a traditional boot loader
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.loader.grub.enable = lib.mkForce false;

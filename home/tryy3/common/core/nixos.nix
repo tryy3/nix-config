@@ -4,5 +4,11 @@
   ...
 }:
 {
+  sessionVariables = {
+    SHELL = "zsh";
+    VISUAL = "nvim";
+    EDITOR = "nvim";
+  };
 
+  services.ssh-agent.enable = true;
 }

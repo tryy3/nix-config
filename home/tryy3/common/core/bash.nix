@@ -5,6 +5,7 @@
     enableCompletion = true;
     shellAliases = {
       cat = "bat";
+      ls = "eza";
     };
 
     initExtra = "";

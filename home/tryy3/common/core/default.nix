@@ -15,19 +15,22 @@ in
       "modules/common/host-spec.nix"
       "modules/home"
     ])
+    (lib.custom.scanPathsFilterPlatform ./.)
     # TODO: Focus is WSL now but this might be a solution to use same nix for everything
     # then do special cases between WSL and regular linux, darwin could be ignored
-    ./${platform}.nix
+    # ./${patform}.nix
 
-    # FIXME(starter): add/edit as desired
-    ./bash.nix
-    ./darwin.nix
-    ./direnv.nix
-    ./fonts.nix
-    ./git.nix
-    ./kitty.nix
-    ./nixos.nix
-    ./ssh.nix
+    # # FIXME(starter): add/edit as desired
+    # # Consider adding `(lib.custom.scanPathsFilterPlatform ./.)`
+    # ./bash.nix
+    # ./bat.nix
+    # ./darwin.nix
+    # ./direnv.nix
+    # ./fonts.nix
+    # ./git.nix
+    # ./kitty.nix
+    # ./nixos.nix
+    # ./ssh.nix
   ];
 
   inherit hostSpec;
@@ -60,9 +63,20 @@ in
       usbutils
       unzip # zip extraction
       unrar # rar extraction
-      bat
+      bat # cat replacement
       vim
+      neovim
       ripgrep
+      eza # ls replacement
+      dust # disk usage - alternative to du
+      duf # disk usage - alternative to df
+      ncdu # TUI for above
+      fd # alternative to find
+      cheat
+      tldr
+      httpie # I should learn this
+      zoxide # Modernr alternative to cd
+      neofetch # who knows
       ;
   };
 

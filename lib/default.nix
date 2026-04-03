@@ -20,6 +20,7 @@
     );
   # Like scanPaths but filters out platform-specific files (darwin.nix / nixos.nix)
   # that don't match the current platform
+  leaf = str: lib.last (lib.splitString "/" str);
   scanPathsFilterPlatform =
     path:
     lib.filter (

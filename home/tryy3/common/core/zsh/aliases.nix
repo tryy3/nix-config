@@ -1,4 +1,4 @@
-{ osConfig, ... }:
+{ ... }:
 let
   devDirectory = "$HOME/src";
   devNix = "${devDirectory}/nix";
@@ -83,8 +83,8 @@ in
 
   #-------------SSH---------------
   ssh = "TERM=xterm ssh";
-  pinghosts = "nmap -sP ${osConfig.hostSpec.networking.subnets.grove.cidr}";
-  scanhostson10022 = "sudo nmap -sS ${osConfig.hostSpec.networking.subnets.grove.cidr} -p ${toString osConfig.hostSpec.networking.ports.tcp.ssh}";
+  # pinghosts = "nmap -sP ${osConfig.hostSpec.networking.subnets.grove.cidr}";
+  # scanhostson10022 = "sudo nmap -sS ${osConfig.hostSpec.networking.subnets.grove.cidr} -p ${toString osConfig.hostSpec.networking.ports.tcp.ssh}";
 
   #-------------rmtrash---------------
   # Path to real rm and rmdir in coreutils. This is so we can not use rmtrash for big files

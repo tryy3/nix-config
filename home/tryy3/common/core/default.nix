@@ -60,6 +60,9 @@ in
       usbutils
       unzip # zip extraction
       unrar # rar extraction
+      bat
+      vim
+      ripgrep
       ;
   };
 

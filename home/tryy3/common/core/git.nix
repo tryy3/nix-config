@@ -6,7 +6,7 @@
 {
   programs.git = {
     enable = true;
-    package = pkgs.gitAndTools.gitFull;
+    package = pkgs.gitFull;
 
     ignores = [
       ".csvignore"
@@ -20,6 +20,6 @@
       # direnv
       ".direnv"
     ];
- };
+  };
 
 }

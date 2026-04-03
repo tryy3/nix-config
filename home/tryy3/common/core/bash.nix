@@ -4,9 +4,9 @@
     enable = true;
     enableCompletion = true;
     shellAliases = {
+      cat = "bat";
     };
 
-    initExtra = ''
-   '';
+    initExtra = "";
   };
 }

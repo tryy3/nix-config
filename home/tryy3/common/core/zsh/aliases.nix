@@ -95,4 +95,7 @@ in
 
   #-------------Git Goodness-------------
   # git aliases moved to introdus
+
+  #-------------Podman------------------
+  pod = "sudo podman -r";
 }

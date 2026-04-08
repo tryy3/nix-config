@@ -53,7 +53,6 @@ in
   home.packages = builtins.attrValues {
     inherit (pkgs)
 
-      # FIXME(starter): add/edit as desired
       # Packages that don't have custom configs go here
       curl
       pciutils
@@ -78,6 +77,13 @@ in
       zoxide # Modernr alternative to cd
       neofetch # who knows
       wget
+      opencode
+      zellij
+      podman
+      podman-compose
+      gnupg
+      pinentry-tty
+      gh
       ;
   };
 

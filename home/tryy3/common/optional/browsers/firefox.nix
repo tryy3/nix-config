@@ -1,7 +1,8 @@
 { ... }:
 {
   programs.firefox = {
-    enable = true;   };
+    enable = true;
+  };
 
   xdg.mimeApps.defaultApplications = {
     "text/html" = [ "firefox.desktop" ];

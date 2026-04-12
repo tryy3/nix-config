@@ -83,6 +83,7 @@
         "command-not-found"
       ];
       extraConfig = ''
+
         # Display red dots whilst waiting for completion.
                 COMPLETION_WAITING_DOTS="true"
       '';

@@ -61,6 +61,7 @@ in
       group = config.users.users.${config.hostSpec.username}.group;
     in
     ''
+
       mkdir -p ${ageFolder} || true
       chown -R ${user}:${group} ${config.hostSpec.home}/.config
     '';

@@ -8,6 +8,12 @@
     enable = true;
     package = pkgs.gitFull;
 
+    extraConfig = {
+      userName = "tryy3"; # Consider changing this to nexer? or maybe 2 different users?s
+      userEmail = "github.com@compilethis.eu";
+      push.autoSetupRemote = true;
+    };
+
     ignores = [
       ".csvignore"
       # nix

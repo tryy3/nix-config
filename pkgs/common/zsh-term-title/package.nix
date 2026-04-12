@@ -18,12 +18,14 @@ stdenv.mkDerivation {
   strictDeps = true;
   dontBuild = true;
   installPhase = ''
+
     install -m755 -D term-title.plugin.zsh $out/${install_path}/${pname}.plugin.zsh
   '';
   meta = {
     homepage = url;
     license = lib.licenses.mit;
     longDescription = ''
+
       This Zsh plugin puts current command and working directory in your terminal title. It can also set tmux window name
       and pane title.
 

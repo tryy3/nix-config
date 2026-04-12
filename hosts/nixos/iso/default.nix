@@ -56,6 +56,7 @@
 
   # Add the build time to the prompt so it's easier to know the ISO age
   programs.bash.promptInit = ''
+
     export PS1="\\[\\033[01;32m\\]\\u@\\h-$(cat /etc/isoBuildTime)\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ "
   '';
 

@@ -9,11 +9,13 @@ stdenv.mkDerivation {
   dontBuild = true;
   dontUnpack = true;
   installPhase = ''
+
     install -m755 -D ${./zsh-deep-autocd.plugin.zsh} $out/${install_path}/${pname}.plugin.zsh
   '';
   meta = {
     license = lib.licenses.mit;
     longDescription = ''
+
       This Zsh plugin creates a function to automatically cd into the first nested directory containing a file.
 
       To install the ${pname} plugin you can add the following to your `programs.zsh.plugins` list:

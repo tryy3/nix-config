@@ -12,6 +12,7 @@
         buildInputs = builtins.attrValues { inherit (pkgs) bats yq-go inetutils; };
       }
       ''
+
         cd $src
         bats tests
         touch $out

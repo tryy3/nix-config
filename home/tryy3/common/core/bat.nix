@@ -26,6 +26,7 @@
     after = [ "linkGeneration" ];
     before = [ ];
     data = ''
+
       ${pkgs.bat}/bin/bat cache --build
     '';
   };

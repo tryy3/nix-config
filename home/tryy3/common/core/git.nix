@@ -8,10 +8,16 @@
     enable = true;
     package = pkgs.gitFull;
 
-    extraConfig = {
-      userName = "tryy3"; # Consider changing this to nexer? or maybe 2 different users?s
-      userEmail = "github.com@compilethis.eu";
-      push.autoSetupRemote = true;
+    settings = {
+      user = {
+        name = "tryy3";
+        email = "github.com@compilethis.eu";
+      };
+
+      push = {
+        default = "simple";
+        autoSetupRemote = true;
+      };
     };
 
     ignores = [

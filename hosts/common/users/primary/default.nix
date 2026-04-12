@@ -11,7 +11,9 @@
 }:
 let
   hostSpec = config.hostSpec;
-  pubKeys = lib.filesystem.listFilesRecursive ./keys;
+  pubKeys = lib.filter (f: lib.hasSuffix ".pub" (toString f)) (
+    lib.filesystem.listFilesRecursive ./keys
+  );
 in
 {
   users.users.${hostSpec.username} = {

@@ -7,7 +7,7 @@
 # `inputs.nixpkgs.follows`, so the module uses the consumer pkgs (this repo's
 # 25.11) for dms-shell and quickshell. If a build fails on stable, switch to
 # the `unstable` overlay (see overlays/default.nix).
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [
     inputs.dms.nixosModules.dank-material-shell

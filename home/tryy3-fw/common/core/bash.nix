@@ -1,0 +1,13 @@
+# FIXME(starter): customize your bash preferences here
+{
+  programs.bash = {
+    enable = true;
+    enableCompletion = true;
+    shellAliases = {
+      cat = "bat";
+      ls = "eza";
+    };
+
+    initExtra = "";
+  };
+}

@@ -1,11 +1,20 @@
 keys:
   users:
     - &alice_testbox USER_KEY_1
+    - &tryy3_fw_16 age1zrjsjhsuwhqkdn2psjpukrsgjh5qls9023gructewn9skz4ya9gskncgmq
   hosts:
     - &testbox age1v8v79wlsjnwvxaa6eulqx3zft0m5srj7etgk4v3rg80j42uzecxs26gaxz
-  creation_rules:
+    - &fw_16 age1zmplxr8x2h3tk4fd3zkleyspa7vtnyz5pyrj7zlf5vsl3fquhqvsp8n4k0
+creation_rules:
   - path_regex: shared\.yaml$
     key_groups:
       - age:
           - *alice_testbox
           - *testbox
+          - *tryy3_fw_16
+          - *fw_16
+  - path_regex: fw-16\.yaml$
+    key_groups:
+      - age:
+          - *tryy3_fw_16
+          - *fw_16

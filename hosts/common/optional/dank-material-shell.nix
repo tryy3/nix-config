@@ -13,7 +13,7 @@
     inputs.dms.nixosModules.dank-material-shell
   ];
 
-  programs.dang-material-shell = {
+  programs.dank-material-shell = {
     enable = true;
     systemd.enable = true;
     dgop.package = pkgs.unstable.dgop;

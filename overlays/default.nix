@@ -19,6 +19,21 @@ let
     # example = prev.example.overrideAttrs (oldAttrs: let ... in {
     # ...
     # });
+
+    # Bump omnictl to match Omni backend (nixpkgs is currently on 1.3.4).
+    # 1.6.1 requires Go 1.26+, so we also override the Go toolchain used.
+    omnictl =
+      (prev.omnictl.override { buildGoModule = prev.buildGo126Module; }).overrideAttrs
+        (oldAttrs: rec {
+          version = "1.6.1";
+          src = prev.fetchFromGitHub {
+            owner = "siderolabs";
+            repo = "omni";
+            rev = "v${version}";
+            hash = "sha256-ncffAF1gEsCMeUszgqZExTSYRPkZ6em85S9thM1U3Sc=";
+          };
+          vendorHash = "sha256-snrOKwD4xbMTdjP13KLTVVB7ikXG+yHS8QT60/tHZ3I=";
+        });
   };
 
   stable-packages = final: _prev: {

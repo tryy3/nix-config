@@ -50,6 +50,12 @@ in
         neededForUsers = true;
       };
     }
+    (lib.mkIf (config.services ? hermes-agent && config.services.hermes-agent.enable) {
+      "hermes-env" = {
+        sopsFile = "${sopsFolder}/secrets.yaml";
+        owner = config.users.users.${config.hostSpec.username}.name;
+      };
+    })
   ];
   # The containing folders are created as root and if this is the first ~/.config/ entry,
   # the ownership is busted and home-manager can't target because it can't write into .config...

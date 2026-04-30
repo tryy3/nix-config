@@ -15,6 +15,8 @@
 {
   imports = lib.flatten [
     inputs.nixos-wsl.nixosModules.default
+    inputs.hermes-agent.nixosModules.default
+    ./hermes.nix
 
     (map lib.custom.relativeToRoot [
       #

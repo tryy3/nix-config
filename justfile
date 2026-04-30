@@ -88,9 +88,12 @@ build-host HOST:
 
 # Called by the rekey recipe
 sops-rekey:
-  cd ../nix-secrets && for file in $(ls sops/*.yaml); do \
+  cd ../nix-secrets && for file in $(ls secrets.yaml); do \
     sops updatekeys -y $file; \
   done
+#  cd ../nix-secrets && for file in $(ls sops/*.yaml); do \
+#    sops updatekeys -y $file; \
+#  done
 
 # Update all keys in sops/*.yaml files in nix-secrets to match the creation rules keys
 rekey: sops-rekey

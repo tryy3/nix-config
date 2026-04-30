@@ -14,4 +14,13 @@
   ];
 
   programs.dank-material-shell.enable = true;
+  programs.dang-material-shell = {
+    enable = true;
+    systemd.enable = true;
+    dgop.package = pkgs.unstable.dgop;
+
+    # settings = { };
+    # session = { };
+    # clipboardSettings = { };
+  };
 }

@@ -3,7 +3,7 @@
 #
 # Reference:
 #   https://danklinux.com/docs/dankmaterialshell
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [
     inputs.dms.homeModules.dank-material-shell
@@ -11,6 +11,7 @@
 
   programs.dank-material-shell = {
     enable = true;
+    dgop.package = pkgs.unstable.dgop;
 
     # Auto-start dms via systemd user service (binds to wayland session target).
     systemd.enable = true;

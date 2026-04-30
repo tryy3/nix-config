@@ -139,6 +139,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # MangoWC - Wayland window manager
+    mango = {
+      url = "github:mangowm/mango";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # DankMaterialShell - Wayland desktop shell (Quickshell-based)
+    # NOTE: DMS targets nixpkgs-unstable; do not override its nixpkgs follows.
+    dms.url = "github:AvengeMedia/DankMaterialShell";
+
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-25.11-darwin";
     nix-darwin = {
       url = "github:lnl7/nix-darwin";

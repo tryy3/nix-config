@@ -18,6 +18,8 @@
     # common/optional/desktops
     # common/optional/comms
     # common/optional/media
+    common/optional/mango.nix
+    common/optional/dank-material-shell.nix
 
     common/optional/sops.nix
   ];

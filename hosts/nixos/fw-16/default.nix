@@ -59,7 +59,9 @@
       "hosts/common/optional/services/openssh.nix" # allow remote SSH access
       "hosts/common/optional/services/podman.nix" # podman container runtime
       "hosts/common/optional/audio.nix" # pipewire and cli controls
-      "hosts/common/optional/xfce.nix" # lightweight x-based window manager
+      "hosts/common/optional/mango.nix" # MangoWC wayland compositor
+      "hosts/common/optional/dank-material-shell.nix" # Quickshell-based desktop shell
+      "hosts/common/optional/dank-material-shell-greeter.nix" # DMS greetd login screen (mango)
     ])
   ];
 

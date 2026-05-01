@@ -21,6 +21,12 @@
   # Use the project's own flake.nix + .envrc (`use flake`). Direnv is already
   # enabled in home/tryy3-fw/common/core/direnv.nix, and the "direnv" Zed
   # extension below makes Zed pick up tools from the project's dev shell.
+  home.packages = builtins.attrValues {
+    inherit (pkgs)
+      nil
+      ;
+  };
+
   programs.zed-editor = {
     enable = true;
     package = pkgs.unstable.zed-editor;

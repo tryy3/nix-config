@@ -153,6 +153,19 @@
 
       # ── env.conf ──────────────────────────────────────────────────────────
       env = [
+        # Hybrid GPU: pin DWL/wlroots to the AMD iGPU (card1, PCI 0000:c2:00.0).
+        # The NVIDIA dGPU (card0) does not work as a primary wlroots backend
+        # and causes mango to lose its output and "freeze" on TTY.
+        #
+        # NOTE: mango's `env=` is parsed AFTER wlroots backend init, so these
+        # are technically too late to influence GPU selection. They appear to
+        # work in the user session only because something else (login shell,
+        # HM session vars) exports them before mango starts. The greeter has
+        # an empty environment and so MUST set these at the systemd unit
+        # level instead — see hosts/common/optional/dank-material-shell-greeter.nix.
+        "WLR_DRM_DEVICES,/dev/dri/card1"
+        "WLR_NO_HARDWARE_CURSORS,1"
+
         "GTK_IM_MODULE,fcitx"
         "QT_IM_MODULE,fcitx"
         "SDL_IM_MODULE,fcitx"

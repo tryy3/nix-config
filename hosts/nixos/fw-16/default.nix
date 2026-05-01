@@ -65,7 +65,7 @@
       "hosts/common/optional/audio.nix" # pipewire and cli controls
       "hosts/common/optional/mango.nix" # MangoWC wayland compositor
       "hosts/common/optional/dank-material-shell.nix" # Quickshell-based desktop shell
-      #"hosts/common/optional/dank-material-shell-greeter.nix" # DMS greetd login screen (mango)
+      "hosts/common/optional/dank-material-shell-greeter.nix" # DMS greetd login screen (mango)
     ])
   ];
 
@@ -137,9 +137,13 @@
   services.power-profiles-daemon.enable = true;
 
   hardware.graphics.enable = true;
+  # NOTE: lspci shows NVIDIA at 0000:c1:00.0 (193) and AMD iGPU at 0000:c2:00.0
+  # (194). The previous values had these swapped, which caused the wayland
+  # session to land on the wrong GPU and lose its output. Verify with
+  # `lspci | grep -E 'VGA|3D'` after a kernel update.
   hardware.nvidia.prime = {
-    amdgpuBusId = "PCI:193:0:0"; # iGPU
-    nvidiaBusId = "PCI:194:0:0"; # dGPU
+    amdgpuBusId = "PCI:194:0:0"; # iGPU (AMD, 0xC2)
+    nvidiaBusId = "PCI:193:0:0"; # dGPU (NVIDIA, 0xC1)
   };
 
   # https://wiki.nixos.org/wiki/FAQ/When_do_I_update_stateVersion

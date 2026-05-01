@@ -3,7 +3,16 @@
 #
 # Reference:
 #   https://danklinux.com/docs/dankmaterialshell
-{ inputs, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.programs.dank-material-shell;
+in
 {
   imports = [
     inputs.dms.homeModules.dank-material-shell
@@ -24,4 +33,21 @@
     # session = { };
     # clipboardSettings = { };
   };
+
+  # The DMS Go binary spawns `qs` (quickshell), and the QML config in turn
+  # spawns lots of helpers (matugen, wtype, sh, grep, touch, dms itself, etc.).
+  # The user systemd manager's PATH is essentially empty (only contains
+  # systemd's own bin dir), so we must provide a full PATH for the unit.
+  #
+  # We include the standard NixOS user-profile locations so anything installed
+  # via home.packages, environment.systemPackages, or the default Nix profile
+  # is reachable.
+  systemd.user.services.dms.Service.Environment = [
+    "PATH=${
+      lib.makeBinPath [
+        cfg.quickshell.package
+        cfg.package
+      ]
+    }:${config.home.profileDirectory}/bin:/etc/profiles/per-user/${config.home.username}/bin:/run/current-system/sw/bin:/run/wrappers/bin"
+  ];
 }

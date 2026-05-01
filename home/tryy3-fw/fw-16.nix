@@ -20,6 +20,7 @@
     # common/optional/media
     common/optional/mango.nix
     common/optional/dank-material-shell.nix
+    common/optional/zed.nix
 
     common/optional/sops.nix
   ];

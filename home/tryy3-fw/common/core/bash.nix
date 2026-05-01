@@ -6,6 +6,8 @@
     shellAliases = {
       cat = "bat";
       ls = "eza";
+      # nixpkgs renames the zed binary to `zeditor` (collides with zsh's `zed` builtin).
+      zed = "zeditor";
     };
 
     initExtra = "";

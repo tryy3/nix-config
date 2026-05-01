@@ -77,6 +77,11 @@ in
   vi = "nvim";
   vim = "nvim";
 
+  #-------------Zed---------------
+  # nixpkgs renames the zed binary to `zeditor` to avoid colliding with the
+  # zsh `zed` line editor builtin. Restore the upstream name in interactive shells.
+  zed = "zeditor";
+
   #-------------journalctl---------------
   jc = "journalctl";
   jcu = "journalctl --user";

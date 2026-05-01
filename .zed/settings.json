@@ -1,0 +1,14 @@
+{
+  "languages": {
+    "Nix": {
+      "language_servers": ["nil", "!nixd"],
+      "formatter": {
+        "external": {
+          "command": "nixfmt"
+        }
+      },
+      "hard_tabs": false,
+      "tab_size": 2
+    }
+  }
+}

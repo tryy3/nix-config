@@ -39,5 +39,11 @@
   programs.nix-ld.enable = true;
 
   i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_TIME = "sv_SE.UTF-8";
+    LC_MONETARY = "sv_SE.UTF-8";
+    LC_PAPER = "sv_SE.UTF-8";
+    LC_MEASUREMENT = "sv_SE.UTF-8";
+  };
   time.timeZone = lib.mkDefault "Europe/Stockholm";
 }

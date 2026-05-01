@@ -114,7 +114,7 @@
       repeat_rate = 25;
       repeat_delay = 600;
       numlockon = 1;
-      xkb_rules_layout = "us,ru";
+      xkb_rules_layout = "se";
       # xkb_rules_options = "ctrl:nocaps";
       # xkb_rules_options = "grp:alt_altgr_toggle,caps:hyper";
 

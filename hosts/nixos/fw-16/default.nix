@@ -9,6 +9,9 @@
 
 {
   lib,
+  inputs,
+  config,
+  pkgs,
   ...
 }:
 {
@@ -18,6 +21,7 @@
     #
     ./hardware-configuration.nix
 
+    inputs.hardware.nixosModules.framework-16-amd-ai-300-series-nvidia
     ##
     ## ========== Disk Layout ==========
     ##
@@ -77,9 +81,36 @@
     username = lib.mkForce "tryy3-fw";
   };
 
+  sops.secrets."wifi/home-psk" = { };
+
+  sops.templates."networkmanager.env".content = ''
+    HOME_PSK=${config.sops.placeholder."wifi/home-psk"}
+  '';
+
   networking = {
     networkmanager.enable = true;
     enableIPv6 = false;
+
+    networkmanager.ensureProfiles = {
+      environmentFiles = [ config.sops.templates."networkmanager.env".path ];
+      profiles.home = {
+        connection = {
+          id = "home";
+          type = "wifi";
+          autoconnect = true;
+        };
+        wifi = {
+          ssid = "Kaktus Plantan";
+          mode = "infrastructure";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$HOME_PSK";
+        };
+        ipv4.method = "auto";
+        ipv6.method = "disabled";
+      };
+    };
   };
 
   boot.loader = {
@@ -96,9 +127,21 @@
     systemd.enable = true;
   };
 
-  hardware.graphics = {
-    enable = true;
+  boot.kernelParams = [ "amdgpu.abmlevel=0" ];
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # Swedish keyboard
+  services.xserver.xkb.layout = "se";
+  console.keyMap = "sv-latin1";
+
+  services.power-profiles-daemon.enable = true;
+
+  hardware.graphics.enable = true;
+  hardware.nvidia.prime = {
+    amdgpuBusId = "PCI:193:0:0"; # iGPU
+    nvidiaBusId = "PCI:194:0:0"; # dGPU
   };
+
   # https://wiki.nixos.org/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "24.11";
 }

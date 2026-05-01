@@ -256,10 +256,10 @@
     },
     "nix-secrets": {
       "locked": {
-        "lastModified": 1777594109,
-        "narHash": "sha256-BKWIuwQWo0r/3MNor331bNZdT4Egsx1D3HnC8s/HNrI=",
+        "lastModified": 1777659061,
+        "narHash": "sha256-NsSjYdPdTKA7FbPHcQTzbNNBSOJ8C8aSmND9P5EdOvc=",
         "ref": "simple",
-        "rev": "7b215fa5faa9ac74e79d0ae32ca5169539e14bb2",
+        "rev": "01f7b5e727e0fec787eb90640879d7ada7a074d8",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/tryy3/nix-secrets.git"

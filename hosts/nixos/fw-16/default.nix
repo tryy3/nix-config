@@ -62,6 +62,7 @@
       # The following are for example sake only and are not necessarily required.
       "hosts/common/optional/services/openssh.nix" # allow remote SSH access
       "hosts/common/optional/services/podman.nix" # podman container runtime
+      "hosts/common/optional/services/tailscale.nix" # tailscale mesh VPN
       "hosts/common/optional/audio.nix" # pipewire and cli controls
       "hosts/common/optional/mango.nix" # MangoWC wayland compositor
       "hosts/common/optional/dank-material-shell.nix" # Quickshell-based desktop shell

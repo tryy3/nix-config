@@ -19,4 +19,13 @@
   services.accounts-daemon.enable = true;
   services.geoclue2.enable = true;
   security.polkit.enable = true;
+
+  # Enable fprintd for fingerprint enrollment and authentication.
+  # After rebuilding, run `fprintd-enroll` to register your fingerprint.
+  services.fprintd.enable = true;
+
+  # Allow fingerprint auth on the greetd login screen and the DMS lock screen.
+  security.pam.services.greetd.fprintAuth = true;
+  security.pam.services.login.fprintAuth = true;
+  security.pam.services.sudo.fprintAuth = true;
 }

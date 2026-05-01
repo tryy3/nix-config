@@ -202,7 +202,8 @@
         "SUPER,r,reload_config"
 
         # menu and terminal
-        "Alt,Return,spawn,foot"
+        "Alt,Return,spawn,ghostty"
+        "SUPER,t,spawn,ghostty"
         "Alt,space,spawn,rofi -config ~/.config/mango/rofi/config.rasi -show drun"
 
         # exit / killclient
@@ -252,8 +253,8 @@
         "ALT,x,switch_proportion_preset,"
 
         # tile layout
-        "SUPER,e,incnmaster,1"
-        "SUPER,t,incnmaster,-1"
+        "CTRL+SUPER,e,incnmaster,1"
+        "CTRL+SUPER,t,incnmaster,-1"
         "ALT,s,zoom,"
 
         # switch layout
@@ -332,7 +333,7 @@
 
         # custom app binds
         "SUPER,Return,spawn,google-chrome"
-        "CTRL+SUPER,Return,spawn,foot -e yazi"
+        "CTRL+SUPER,Return,spawn,ghostty -e yazi"
         ''CTRL+ALT,a,spawn_shell,grim -g "$(slurp -b '#2E2A1E55' -c '#fb751bff')" -t ppm - | satty -f -''
         "SUPER,h,spawn,bash ~/.config/mango/scripts/hide_waybar_mango.sh"
         "SUPER,l,spawn,swaylock -f -c 000000"
@@ -340,6 +341,7 @@
         "CTRL+ALT,BackSpace,spawn,swaync-client -C"
         "SUPER,p,spawn,bash ~/.config/mango/scripts/monitor.sh"
         "SUPER+SHIFT,p,spawn,bash ~/.config/mango/scripts/virmon.sh"
+        "SUPER,F1,spawn,dms ipc call keybinds toggle mangowc"
       ];
 
       mousebind = [
@@ -437,6 +439,7 @@
         "animation_type_close:zoom,appid:^com.gabm.satty$"
 
         "isterm:1,appid:St"
+        "isterm:1,appid:com.mitchellh.ghostty"
 
         # These applications can only strictly adhere to the tiling size when maximized
         "force_fakemaximize:1,appid:org.gnome.SystemMonitor"
@@ -461,6 +464,7 @@
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^mpv$"
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^St$"
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^foot$"
+        "unfocused_opacity:1.0,focused_opacity:1.0,appid:^com.mitchellh.ghostty$"
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^obsidian$"
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^Google-chrome$"
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^QQ$"

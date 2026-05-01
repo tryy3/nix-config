@@ -1,5 +1,5 @@
 {
-  programs.kitty = {
+  programs.ghostty = {
     enable = true;
   };
 }

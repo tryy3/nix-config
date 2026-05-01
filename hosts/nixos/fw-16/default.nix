@@ -65,7 +65,7 @@
       "hosts/common/optional/audio.nix" # pipewire and cli controls
       "hosts/common/optional/mango.nix" # MangoWC wayland compositor
       "hosts/common/optional/dank-material-shell.nix" # Quickshell-based desktop shell
-      "hosts/common/optional/dank-material-shell-greeter.nix" # DMS greetd login screen (mango)
+      #"hosts/common/optional/dank-material-shell-greeter.nix" # DMS greetd login screen (mango)
     ])
   ];
 

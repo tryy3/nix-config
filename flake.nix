@@ -148,8 +148,13 @@
     # DankMaterialShell - Wayland desktop shell (Quickshell-based)
     # NOTE: DMS targets nixpkgs-unstable; do not override its nixpkgs follows.
     dms = {
-      url = "github:AvengeMedia/DankMaterialShell";
-      # Don't constrain to stable; DMS needs unstable packages like dgop
+      url = "github:AvengeMedia/DankMaterialShell/stable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    dgop = {
+      url = "github:AvengeMedia/dgop";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-25.11-darwin";

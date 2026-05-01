@@ -11,7 +11,9 @@
 
   programs.dank-material-shell = {
     enable = true;
-    dgop.package = pkgs.unstable.dgop;
+    enableSystemMonitoring = true;
+    dgop.package = inputs.dgop.packages.${pkgs.system}.default;
+    # quickshell.package = pkgs.unstable.quickshell;
 
     # Auto-start dms via systemd user service (binds to wayland session target).
     systemd.enable = true;

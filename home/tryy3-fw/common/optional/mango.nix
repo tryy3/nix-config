@@ -204,7 +204,7 @@
         # menu and terminal
         "Alt,Return,spawn,ghostty"
         "SUPER,t,spawn,ghostty"
-        "Alt,space,spawn,rofi -config ~/.config/mango/rofi/config.rasi -show drun"
+        "SUPER,space,spawn,dms ipc call spotlight toggle"
 
         # exit / killclient
         "SUPER,m,quit"
@@ -332,11 +332,12 @@
         "none,XF86MonBrightnessDown,spawn,~/.config/mango/scripts/brightness.sh down"
 
         # custom app binds
-        "SUPER,Return,spawn,google-chrome"
+        "SUPER,Return,spawn,xdg-open https://duckduckgo.com/"
+        "SUPER,w,killclient,"
         "CTRL+SUPER,Return,spawn,ghostty -e yazi"
         ''CTRL+ALT,a,spawn_shell,grim -g "$(slurp -b '#2E2A1E55' -c '#fb751bff')" -t ppm - | satty -f -''
         "SUPER,h,spawn,bash ~/.config/mango/scripts/hide_waybar_mango.sh"
-        "SUPER,l,spawn,swaylock -f -c 000000"
+        "SUPER,l,spawn,dms ipc call lock lock"
         "CTRL+ALT,backslash,spawn,swaync-client -t"
         "CTRL+ALT,BackSpace,spawn,swaync-client -C"
         "SUPER,p,spawn,bash ~/.config/mango/scripts/monitor.sh"

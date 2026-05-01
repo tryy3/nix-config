@@ -1,25 +1,22 @@
-# System-level enablement of DankMaterialShell.
-# Adds polkit, power-profiles-daemon, accounts-daemon, geoclue2, and the
-# dms/quickshell packages system-wide. Pair with the home-manager module at
-# home/<user>/common/optional/dank-material-shell.nix for user-side configuration.
+# System-level dependencies for DankMaterialShell.
 #
-# NOTE: DMS targets nixpkgs-unstable upstream. We do NOT override its
-# `inputs.nixpkgs.follows`, so the module uses the consumer pkgs (this repo's
-# 25.11) for dms-shell and quickshell. If a build fails on stable, switch to
-# the `unstable` overlay (see overlays/default.nix).
-{ inputs, pkgs, ... }:
+# NOTE: per the DMS docs we enable DMS in EITHER the NixOS module OR the
+# home-manager module — never both, because both define
+# `systemd.user.services.dms` and create competing
+# `graphical-session.target.wants/dms.service` symlinks.
+#
+# We use the home-manager module
+# (home/<user>/common/optional/dank-material-shell.nix) for actual configuration
+# and the user-level dms.service. This file only declares the system services
+# DMS expects (polkit, accounts-daemon, geoclue2, power-profiles).
+#
+# The DMS package itself reaches the system via the greeter module
+# (hosts/common/optional/dank-material-shell-greeter.nix), which imports
+# inputs.dms.nixosModules.greeter.
+{ ... }:
 {
-  imports = [
-    inputs.dms.nixosModules.dank-material-shell
-  ];
-
-  programs.dank-material-shell = {
-    enable = true;
-    systemd.enable = true;
-    dgop.package = pkgs.unstable.dgop;
-
-    # settings = { };
-    # session = { };
-    # clipboardSettings = { };
-  };
+  services.power-profiles-daemon.enable = true;
+  services.accounts-daemon.enable = true;
+  services.geoclue2.enable = true;
+  security.polkit.enable = true;
 }

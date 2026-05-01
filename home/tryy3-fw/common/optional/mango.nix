@@ -8,11 +8,43 @@
 # `~/.config/mango/config.conf` from `settings`, so we inline everything here.
 # Repeating keys (`bind`, `windowrule`, `env`, etc.) are expressed as Nix lists,
 # which the module emits as duplicate `key=value` lines.
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 {
   imports = [
     inputs.mango.hmModules.mango
   ];
+
+  # Screenshot tools: grim (capture) + slurp (region select) + satty (annotate)
+  # satty uses unstable to get floating-hack support (requires >= 0.20.1)
+  home.packages =
+    builtins.attrValues {
+      inherit (pkgs)
+        grim
+        slurp
+        ;
+    }
+    ++ [ pkgs.unstable.satty ];
+
+  # Satty configuration:
+  # - Escape = copy to clipboard + exit (the "just grab it" flow)
+  # - Enter  = copy to clipboard + exit (same, after annotating)
+  # - early-exit closes satty immediately after copy/save
+  # - wl-copy handles Wayland clipboard
+  # - output-filename is set so Ctrl+S saves to ~/Pictures/Screenshots/
+  home.file."Pictures/Screenshots/.keep".text = "";
+  xdg.configFile."satty/config.toml".text = ''
+    [general]
+    fullscreen = false
+    floating-hack = true
+    early-exit = true
+    copy-command = "wl-copy"
+    output-filename = "/home/tryy3-fw/Pictures/Screenshots/satty-%Y-%m-%d_%H:%M:%S.png"
+    actions-on-enter = ["save-to-clipboard", "exit"]
+    actions-on-escape = ["save-to-clipboard", "exit"]
+    initial-tool = "brush"
+    annotation-size-factor = 2
+    no-window-decoration = true
+  '';
 
   wayland.windowManager.mango = {
     enable = true;
@@ -198,7 +230,6 @@
       # ── bind.conf ─────────────────────────────────────────────────────────
       bind = [
         # reload config
-        "SUPER,r,spawn_shell,bash ~/.config/mango/scripts/config_check.sh"
         "SUPER,r,reload_config"
 
         # menu and terminal
@@ -280,15 +311,25 @@
         "Ctrl,8,view,8,0"
         "Ctrl,9,view,9,0"
 
-        "Alt,1,tag,1,0"
-        "Alt,2,tag,2,0"
-        "Alt,3,tag,3,0"
-        "Alt,4,tag,4,0"
-        "Alt,5,tag,5,0"
-        "Alt,6,tag,6,0"
-        "Alt,7,tag,7,0"
-        "Alt,8,tag,8,0"
-        "Alt,9,tag,9,0"
+        "Alt,1,view,1,0"
+        "Alt,2,view,2,0"
+        "Alt,3,view,3,0"
+        "Alt,4,view,4,0"
+        "Alt,5,view,5,0"
+        "Alt,6,view,6,0"
+        "Alt,7,view,7,0"
+        "Alt,8,view,8,0"
+        "Alt,9,view,9,0"
+
+        "Alt+SHIFT,1,tag,1,0"
+        "Alt+SHIFT,2,tag,2,0"
+        "Alt+SHIFT,3,tag,3,0"
+        "Alt+SHIFT,4,tag,4,0"
+        "Alt+SHIFT,5,tag,5,0"
+        "Alt+SHIFT,6,tag,6,0"
+        "Alt+SHIFT,7,tag,7,0"
+        "Alt+SHIFT,8,tag,8,0"
+        "Alt+SHIFT,9,tag,9,0"
 
         "ctrl+Super,1,toggletag,1"
         "ctrl+Super,2,toggletag,2"
@@ -325,23 +366,22 @@
         "ALT+SHIFT,Z,incgaps,-1"
         "ALT+SHIFT,R,togglegaps"
 
-        # brightness and volume
-        "none,XF86AudioRaiseVolume,spawn,~/.config/mango/scripts/volume.sh up"
-        "none,XF86AudioLowerVolume,spawn,~/.config/mango/scripts/volume.sh down"
-        "none,XF86MonBrightnessUp,spawn,~/.config/mango/scripts/brightness.sh up"
-        "none,XF86MonBrightnessDown,spawn,~/.config/mango/scripts/brightness.sh down"
+        # brightness and volume (via DMS IPC)
+        "none,XF86AudioRaiseVolume,spawn,dms ipc call audio increment 3"
+        "none,XF86AudioLowerVolume,spawn,dms ipc call audio decrement 3"
+        "none,XF86MonBrightnessUp,spawn,dms ipc call brightness increment 5"
+        "none,XF86MonBrightnessDown,spawn,dms ipc call brightness decrement 5"
 
         # custom app binds
         "SUPER,Return,spawn,xdg-open https://duckduckgo.com/"
         "SUPER,w,killclient,"
         "CTRL+SUPER,Return,spawn,ghostty -e yazi"
-        ''CTRL+ALT,a,spawn_shell,grim -g "$(slurp -b '#2E2A1E55' -c '#fb751bff')" -t ppm - | satty -f -''
-        "SUPER,h,spawn,bash ~/.config/mango/scripts/hide_waybar_mango.sh"
+        ''SUPER+SHIFT,s,spawn_shell,grim -g "$(slurp -b '#2E2A1E55' -c '#fb751bff')" -t ppm - | satty --filename -''
+        "SUPER,s,spawn_shell,grim -t ppm - | satty --filename -"
+        "SUPER,h,spawn,dms ipc call bar toggle index 0"
         "SUPER,l,spawn,dms ipc call lock lock"
-        "CTRL+ALT,backslash,spawn,swaync-client -t"
-        "CTRL+ALT,BackSpace,spawn,swaync-client -C"
-        "SUPER,p,spawn,bash ~/.config/mango/scripts/monitor.sh"
-        "SUPER+SHIFT,p,spawn,bash ~/.config/mango/scripts/virmon.sh"
+        "CTRL+ALT,backslash,spawn,dms ipc call notifications toggle"
+        "CTRL+ALT,BackSpace,spawn,dms ipc call notifications clearAll"
         "SUPER,F1,spawn,dms ipc call keybinds toggle mangowc"
       ];
 
@@ -438,6 +478,7 @@
         "animation_type_close:zoom,appid:qxdrag.py"
         "animation_type_close:zoom,appid:python3,title:qxdrag"
         "animation_type_close:zoom,appid:^com.gabm.satty$"
+        "isfloating:1,appid:^com.gabm.satty$"
 
         "isterm:1,appid:St"
         "isterm:1,appid:com.mitchellh.ghostty"
@@ -449,7 +490,7 @@
         "force_fakemaximize:1,appid:org.telegram.desktop"
         "istagsilent:1,appid:org.telegram.desktop"
 
-        "tags:4,appid:Google-chrome"
+        "tags:4,appid:chromium"
         "tags:3,appid:QQ"
         "tags:2,appid:mpv"
         "tags:6,appid:obs"
@@ -467,7 +508,7 @@
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^foot$"
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^com.mitchellh.ghostty$"
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^obsidian$"
-        "unfocused_opacity:1.0,focused_opacity:1.0,appid:^Google-chrome$"
+        "unfocused_opacity:1.0,focused_opacity:1.0,appid:^chromium$"
         "unfocused_opacity:1.0,focused_opacity:1.0,appid:^QQ$"
       ];
 

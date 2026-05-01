@@ -50,42 +50,47 @@ in
     };
   };
 
-  home.packages = builtins.attrValues {
-    inherit (pkgs)
+  home.packages =
+    builtins.attrValues {
+      inherit (pkgs)
 
-      # Packages that don't have custom configs go here
-      curl
-      pciutils
-      pfetch # system info
-      pre-commit # git hooks
-      p7zip # compression & encryption
-      usbutils
-      unzip # zip extraction
-      unrar # rar extraction
-      bat # cat replacement
-      vim
-      neovim
-      ripgrep
-      eza # ls replacement
-      dust # disk usage - alternative to du
-      duf # disk usage - alternative to df
-      ncdu # TUI for above
-      fd # alternative to find
-      cheat
-      tldr
-      httpie # I should learn this
-      zoxide # Modernr alternative to cd
-      neofetch # who knows
-      wget
-      opencode
-      zellij
-      podman
-      podman-compose
-      gnupg
-      pinentry-tty
-      gh
-      ;
-  };
+        # Packages that don't have custom configs go here
+        curl
+        pciutils
+        pfetch # system info
+        pre-commit # git hooks
+        p7zip # compression & encryption
+        usbutils
+        unzip # zip extraction
+        unrar # rar extraction
+        bat # cat replacement
+        vim
+        neovim
+        ripgrep
+        eza # ls replacement
+        dust # disk usage - alternative to du
+        duf # disk usage - alternative to df
+        ncdu # TUI for above
+        fd # alternative to find
+        cheat
+        tldr
+        httpie # I should learn this
+        zoxide # Modernr alternative to cd
+        neofetch # who knows
+        wget
+        zellij
+        podman
+        podman-compose
+        gnupg
+        pinentry-tty
+        gh
+        yazi # terminal file manager
+        wl-clipboard # wayland clipboard (wl-copy / wl-paste)
+        ;
+    }
+    ++ [
+      pkgs.unstable.opencode
+    ];
 
   nix = {
     package = lib.mkDefault pkgs.nix;

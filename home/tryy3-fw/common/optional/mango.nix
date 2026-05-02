@@ -32,6 +32,35 @@
   # - wl-copy handles Wayland clipboard
   # - output-filename is set so Ctrl+S saves to ~/Pictures/Screenshots/
   home.file."Pictures/Screenshots/.keep".text = "";
+
+  # ── Nix-dev session restore script ────────────────────────────────────────
+  # Launched via SUPER+SHIFT+F1 to restore the full nix-config workflow:
+  #   - tag 2: two Ghostty terminals side-by-side (shell + opencode)
+  #   - tag 3: Zed editor with nix-config project open
+  #
+  # Uses explicit --class values so MangoWC windowrules can route each window
+  # to the correct tag deterministically. Launch order matters: shell terminal
+  # first (becomes tile master on tag 2), opencode second (stack slot).
+  # Behaviour on repeated press: non-idempotent — opens additional windows.
+  home.file.".config/mango/scripts/restore-nix-dev.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      PROJECT="$HOME/src/nix/nix-config"
+      if [ ! -d "$PROJECT" ]; then
+        notify-send "restore-nix-dev" "Project directory not found: $PROJECT" --urgency=critical
+        exit 1
+      fi
+      # 1) Shell terminal → tag 2 master slot
+      ghostty --class=com.mitchellh.ghostty.nix-shell --working-directory="$PROJECT" &
+      sleep 0.3
+      # 2) opencode terminal → tag 2 stack slot
+      ghostty --class=com.mitchellh.ghostty.nix-opencode --working-directory="$PROJECT" -e opencode &
+      sleep 0.1
+      # 3) Zed editor → tag 3
+      zeditor "$PROJECT" &
+    '';
+  };
   xdg.configFile."satty/config.toml".text = ''
     [general]
     fullscreen = false
@@ -169,8 +198,8 @@
       # ── Appearance ────────────────────────────────────────────────────────
       gappih = 5;
       gappiv = 5;
-      gappoh = 15;
-      gappov = 15;
+      gappoh = 5;
+      gappov = 5;
       scratchpad_width_ratio = 0.8;
       scratchpad_height_ratio = 0.9;
       borderpx = 4;
@@ -198,10 +227,9 @@
         "WLR_DRM_DEVICES,/dev/dri/card1"
         "WLR_NO_HARDWARE_CURSORS,1"
 
-        "GTK_IM_MODULE,fcitx"
-        "QT_IM_MODULE,fcitx"
-        "SDL_IM_MODULE,fcitx"
-        "XMODIFIERS,@im=fcitx"
+        # Note: fcitx input method framework removed to fix AltGr key issues
+        # with Swedish keyboard layout. Re-add if CJK input is needed later.
+
         "GLFW_IM_MODULE,ibus"
         "QT_QPA_PLATFORMTHEME,qt5ct"
         "QT_AUTO_SCREEN_SCALE_FACTOR,1"
@@ -373,7 +401,9 @@
         "none,XF86MonBrightnessDown,spawn,dms ipc call brightness decrement 5"
 
         # custom app binds
-        "SUPER,Return,spawn,xdg-open https://duckduckgo.com/"
+        "SUPER,Return,spawn,zen-twilight"
+        "SUPER,d,spawn,vesktop"
+        "SUPER,y,spawn,spotify-web"
         "SUPER,w,killclient,"
         "CTRL+SUPER,Return,spawn,ghostty -e yazi"
         ''SUPER+SHIFT,s,spawn_shell,grim -g "$(slurp -b '#2E2A1E55' -c '#fb751bff')" -t ppm - | satty --filename -''
@@ -383,6 +413,9 @@
         "CTRL+ALT,backslash,spawn,dms ipc call notifications toggle"
         "CTRL+ALT,BackSpace,spawn,dms ipc call notifications clearAll"
         "SUPER,F1,spawn,dms ipc call keybinds toggle mangowc"
+
+        # ── Nix-dev session restore (tag2=terminals, tag3=Zed) ────────────────
+        "SUPER+SHIFT,F1,spawn,/home/tryy3-fw/.config/mango/scripts/restore-nix-dev.sh"
       ];
 
       mousebind = [
@@ -482,6 +515,19 @@
 
         "isterm:1,appid:St"
         "isterm:1,appid:com.mitchellh.ghostty"
+
+        # ── Nix-dev restore terminals (spawned by restore-nix-dev.sh) ─────────
+        # Route to tag 2 side-by-side; treated as terminals for swallowing etc.
+        # Shell terminal (tile master): ghostty --class=com.mitchellh.ghostty.nix-shell
+        "isterm:1,appid:com.mitchellh.ghostty.nix-shell"
+        "tags:2,appid:com.mitchellh.ghostty.nix-shell"
+        "unfocused_opacity:1.0,focused_opacity:1.0,appid:^com.mitchellh.ghostty.nix-shell$"
+        # OpenCode terminal (tile stack): ghostty --class=com.mitchellh.ghostty.nix-opencode
+        "isterm:1,appid:com.mitchellh.ghostty.nix-opencode"
+        "tags:2,appid:com.mitchellh.ghostty.nix-opencode"
+        "unfocused_opacity:1.0,focused_opacity:1.0,appid:^com.mitchellh.ghostty.nix-opencode$"
+        # Zed editor → tag 3 (appid from dev.zed.Zed.desktop filename)
+        "tags:3,appid:dev.zed.Zed"
 
         # These applications can only strictly adhere to the tiling size when maximized
         "force_fakemaximize:1,appid:org.gnome.SystemMonitor"

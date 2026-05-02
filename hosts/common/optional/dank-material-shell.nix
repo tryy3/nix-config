@@ -25,7 +25,7 @@
   services.fprintd.enable = true;
 
   # Allow fingerprint auth on the greetd login screen and the DMS lock screen.
-  security.pam.services.greetd.fprintAuth = true;
+  security.pam.services.greetd.fprintAuth = false;
   security.pam.services.login.fprintAuth = true;
   security.pam.services.sudo.fprintAuth = true;
 }

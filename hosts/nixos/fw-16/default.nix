@@ -22,6 +22,7 @@
     ./hardware-configuration.nix
 
     inputs.hardware.nixosModules.framework-16-amd-ai-300-series-nvidia
+    inputs.nix-index-database.nixosModules.default
     ##
     ## ========== Disk Layout ==========
     ##
@@ -67,6 +68,7 @@
       "hosts/common/optional/mango.nix" # MangoWC wayland compositor
       "hosts/common/optional/dank-material-shell.nix" # Quickshell-based desktop shell
       "hosts/common/optional/dank-material-shell-greeter.nix" # DMS greetd login screen (mango)
+      "hosts/common/optional/bitwarden.nix" # Bitwarden desktop + Zen integration + fingerprint unlock
     ])
   ];
 
@@ -136,6 +138,7 @@
   console.keyMap = "sv-latin1";
 
   services.power-profiles-daemon.enable = true;
+  services.upower.enable = true;
 
   hardware.graphics.enable = true;
   # NOTE: lspci shows NVIDIA at 0000:c1:00.0 (193) and AMD iGPU at 0000:c2:00.0
@@ -147,6 +150,20 @@
     nvidiaBusId = "PCI:193:0:0"; # dGPU (NVIDIA, 0xC1)
   };
 
+  # Enable dconf for GTK theming and other dconf-based settings
+  programs.dconf.enable = true;
+
   # https://wiki.nixos.org/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "24.11";
+
+  #
+  # ========== nix-index-database ==========
+  #
+  # Enable nix-index with pre-built database from nix-community
+  programs.nix-index-database = {
+    enable = true;
+    # Also install comma for running commands without installing them first
+    # Example: `, cowsay hello` will temporarily use the cowsay package
+    comma.enable = true;
+  };
 }

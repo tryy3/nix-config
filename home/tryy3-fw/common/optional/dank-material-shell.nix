@@ -72,7 +72,11 @@ in
       dockLauncherLogoMode = "dank";
       dockLauncherLogoColorOverride = "primary";
 
-      # --- Matugen templates (disabled for apps not in use) ---
+      # --- Matugen templates ---
+      # Terminal emulator themes
+      matugenTemplateGhostty = true; # Enable Ghostty terminal theming
+
+      # Disabled templates for apps not in use:
       matugenTemplateNiri = false;
       matugenTemplateHyprland = false;
       matugenTemplateQt5ct = false;

@@ -1,0 +1,2 @@
+- [ ] With my current setup, when updating and such my whole Zen history, cookies and such get deleted. For example when we made recent changes to theming all the histroy got deleted, including extensions
+- [ ] Look over my power button and it's options, currently when accidentally clicking it, it shutsdown

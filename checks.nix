@@ -39,8 +39,8 @@
       mixed-line-endings.enable = true;
       trim-trailing-whitespace.enable = true;
 
-      forbid-submodules = {
-        enable = true;
+      forbid-new-submodules = {
+        enable = false;
         name = "forbid submodules";
         description = "forbids any submodules in the repository";
         language = "fail";

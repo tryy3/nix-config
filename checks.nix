@@ -40,12 +40,13 @@
       trim-trailing-whitespace.enable = true;
 
       forbid-new-submodules = {
-        enable = false;
-        name = "forbid submodules";
-        description = "forbids any submodules in the repository";
+        enable = true;
+        name = "forbid new submodules";
+        description = "forbids any new submodules in the repository";
         language = "fail";
         entry = "submodules are not allowed in this repository:";
         types = [ "directory" ];
+        excludes = [ "^\.agents/skills/nixos$" ];
       };
 
       destroyed-symlinks = {

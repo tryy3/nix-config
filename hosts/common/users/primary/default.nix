@@ -36,7 +36,9 @@ in
       "d /home/${hostSpec.username}/.ssh/sockets 0750 ${user} ${group} -"
     ];
 
-  # No matter what environment we are in we want these tools
+  # NixOS requires programs.zsh.enable when zsh is set as a login shell;
+  # the HM module handles configuration, but the system module must be enabled
+  # for the shell to work properly (PATH, /etc/shells, etc.).
   programs.zsh.enable = true;
   environment.systemPackages = [
     pkgs.just

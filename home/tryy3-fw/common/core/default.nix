@@ -10,29 +10,29 @@ let
   platform = if hostSpec.isDarwin then "darwin" else "nixos";
 in
 {
-  imports = lib.flatten [
+  imports =
     (map lib.custom.relativeToRoot [
       "modules/common/host-spec.nix"
       "modules/home"
     ])
-    (lib.custom.scanPathsFilterPlatform ./.)
-    [ ./${platform}.nix ]
-    # TODO: Focus is WSL now but this might be a solution to use same nix for everything
-    # then do special cases between WSL and regular linux, darwin could be ignored
-    # ./${patform}.nix
+    ++ (lib.custom.scanPathsFilterPlatform ./.)
+    ++ [ ./${platform}.nix ];
 
-    # # FIXME(starter): add/edit as desired
-    # # Consider adding `(lib.custom.scanPathsFilterPlatform ./.)`
-    # ./bash.nix
-    # ./bat.nix
-    # ./darwin.nix
-    # ./direnv.nix
-    # ./fonts.nix
-    # ./git.nix
-    # ./kitty.nix
-    # ./nixos.nix
-    # ./ssh.nix
-  ];
+  # TODO: Focus is WSL now but this might be a solution to use same nix for everything
+  # then do special cases between WSL and regular linux, darwin could be ignored
+  # ./${patform}.nix
+
+  # # FIXME(starter): add/edit as desired
+  # # Consider adding `(lib.custom.scanPathsFilterPlatform ./.)`
+  # ./bash.nix
+  # ./bat.nix
+  # ./darwin.nix
+  # ./direnv.nix
+  # ./fonts.nix
+  # ./git.nix
+  # ./kitty.nix
+  # ./nixos.nix
+  # ./ssh.nix
 
   inherit hostSpec;
 
@@ -46,7 +46,7 @@ in
       "$HOME/.local/bin"
     ];
     sessionVariables = {
-      FLAKE = "$HOME/src/nix/nix-config";
+      FLAKE = config.hostSpec.nixConfigPath;
     };
   };
 

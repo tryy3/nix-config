@@ -19,25 +19,19 @@
   #
   # ========== Nix Helper ==========
   #
-  # Provide better build output and will also handle garbage collection in place of standard nix gc (garbace collection)
+  # Provide better build output and will also handle garbage collection in place of standard nix gc (garbage collection)
   # FIXME(starter): customize garbage collection rules as desired.
   programs.nh = {
     enable = true;
     clean.enable = true;
     clean.extraArgs = "--keep-since 20d --keep 20";
-    # FIXME(starter): `config.hostSpec.home` will be `/home/foo/`, or `/Users/foo/` if you are on Darwin. Edit the rest of the path
-    # so that it leads to where you store your nix-config.  e.g. if you have your config at `/home/foo/src/nix/nix-config` then the following
-    # would be `flake = "${config.hostSpec.home}/src/nixnix-config";`
-    flake = "${config.hostSpec.home}/nix-config";
+    flake = config.hostSpec.nixConfigPath;
   };
 
   #
   # ========== Localization ==========
   #
   # FIXME(starter): customize localization values as desired.
-  # required for remote tools such as vscode
-  programs.nix-ld.enable = true;
-
   i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_TIME = "sv_SE.UTF-8";

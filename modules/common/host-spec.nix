@@ -59,6 +59,15 @@
             in
             if pkgs.stdenv.isLinux then "/home/${user}" else "/Users/${user}";
         };
+        nixConfigPath = lib.mkOption {
+          type = lib.types.str;
+          description = "The path to the nix-config flake directory (used by nh and FLAKE env var)";
+          default =
+            let
+              home = config.hostSpec.home;
+            in
+            "${home}/src/nix/nix-config";
+        };
         persistFolder = lib.mkOption {
           type = lib.types.str;
           description = "The folder to persist data if impermenance is enabled";

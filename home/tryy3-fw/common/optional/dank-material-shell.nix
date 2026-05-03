@@ -21,7 +21,7 @@ in
   programs.dank-material-shell = {
     enable = true;
     enableSystemMonitoring = true;
-    dgop.package = inputs.dgop.packages.${pkgs.system}.default;
+    dgop.package = inputs.dgop.packages.${pkgs.stdenv.hostPlatform.system}.default;
     # quickshell.package = pkgs.unstable.quickshell;
 
     # Auto-start dms via systemd user service (binds to wayland session target).
@@ -109,7 +109,7 @@ in
             showCpuGraph = true;
             showCpuTemp = true;
             showGpuTemp = true;
-            gpuPciId = "10de:2d58";
+            gpuPciId = "10de:2d58"; # NVIDIA dGPU vendor:device ID (verify with `lspci -nn | grep NVIDIA`)
             showMemory = true;
             showMemoryGraph = true;
             showNetwork = true;

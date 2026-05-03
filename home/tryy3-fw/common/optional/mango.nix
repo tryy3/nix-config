@@ -8,7 +8,12 @@
 # `~/.config/mango/config.conf` from `settings`, so we inline everything here.
 # Repeating keys (`bind`, `windowrule`, `env`, etc.) are expressed as Nix lists,
 # which the module emits as duplicate `key=value` lines.
-{ inputs, pkgs, ... }:
+{
+  inputs,
+  pkgs,
+  config,
+  ...
+}:
 {
   imports = [
     inputs.mango.hmModules.mango
@@ -67,7 +72,7 @@
     floating-hack = true
     early-exit = true
     copy-command = "wl-copy"
-    output-filename = "/home/tryy3-fw/Pictures/Screenshots/satty-%Y-%m-%d_%H:%M:%S.png"
+    output-filename = "${config.home.homeDirectory}/Pictures/Screenshots/satty-%Y-%m-%d_%H:%M:%S.png"
     actions-on-enter = ["save-to-clipboard", "exit"]
     actions-on-escape = ["save-to-clipboard", "exit"]
     initial-tool = "brush"
@@ -415,7 +420,7 @@
         "SUPER,F1,spawn,dms ipc call keybinds toggle mangowc"
 
         # ── Nix-dev session restore (tag2=terminals, tag3=Zed) ────────────────
-        "SUPER+SHIFT,F1,spawn,/home/tryy3-fw/.config/mango/scripts/restore-nix-dev.sh"
+        "SUPER+SHIFT,F1,spawn,${config.home.homeDirectory}/.config/mango/scripts/restore-nix-dev.sh"
       ];
 
       mousebind = [

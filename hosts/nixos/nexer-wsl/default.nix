@@ -13,38 +13,37 @@
   ...
 }:
 {
-  imports = lib.flatten [
+  imports = [
     inputs.nixos-wsl.nixosModules.default
     inputs.hermes-agent.nixosModules.default
     ./hermes.nix
+  ]
+  ++ (map lib.custom.relativeToRoot [
+    #
+    # ========== Required Configs ==========
+    #
+    "hosts/common/core"
 
-    (map lib.custom.relativeToRoot [
-      #
-      # ========== Required Configs ==========
-      #
-      "hosts/common/core"
+    #
+    # ========== Non-Primary Users to Create ==========
+    #
+    # FIXME(starter): the primary user, defined in `nix-config/hosts/common/users`, is added by default, via
+    # `hosts/common/core` above.
+    # To create additional users, specify the path to their config file, as shown in the commented line below, and create/modify
+    # the specified file as required. See `nix-config/hosts/common/users/exampleSecondUser` for more info.
 
-      #
-      # ========== Non-Primary Users to Create ==========
-      #
-      # FIXME(starter): the primary user, defined in `nix-config/hosts/common/users`, is added by default, via
-      # `hosts/common/core` above.
-      # To create additional users, specify the path to their config file, as shown in the commented line below, and create/modify
-      # the specified file as required. See `nix-config/hosts/common/users/exampleSecondUser` for more info.
+    #"hosts/common/users/exampleSecondUser"
 
-      #"hosts/common/users/exampleSecondUser"
-
-      #
-      # ========== Optional Configs ==========
-      #
-      # FIXME(starter): add or remove any optional host-level configuration files the host will use
-      # The following are for example sake only and are not necessarily required.
-      "hosts/common/optional/services/openssh.nix" # allow remote SSH access
-      "hosts/common/optional/services/podman.nix" # podman container runtime
-      "hosts/common/optional/audio.nix" # pipewire and cli controls
-      "hosts/common/optional/xfce.nix" # lightweight x-based window manager
-    ])
-  ];
+    #
+    # ========== Optional Configs ==========
+    #
+    # FIXME(starter): add or remove any optional host-level configuration files the host will use
+    # The following are for example sake only and are not necessarily required.
+    "hosts/common/optional/services/openssh.nix" # allow remote SSH access
+    "hosts/common/optional/services/podman.nix" # podman container runtime
+    "hosts/common/optional/audio.nix" # pipewire and cli controls
+    "hosts/common/optional/xfce.nix" # lightweight x-based window manager
+  ]);
 
   #
   # ========== Host Specification ==========
@@ -55,10 +54,14 @@
   # for examples.
   hostSpec = {
     hostName = "nexer-wsl";
+    nixConfigPath = "/home/tryy3/nix-config";
   };
 
   wsl.enable = true;
   wsl.defaultUser = "tryy3";
+
+  # Required for running pre-compiled non-Nix binaries (e.g. VS Code remote server)
+  programs.nix-ld.enable = true;
 
   networking = {
     networkmanager.enable = true;

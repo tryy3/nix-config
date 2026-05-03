@@ -15,7 +15,7 @@
   ...
 }:
 {
-  imports = lib.flatten [
+  imports = [
     #
     # ========== Hardware ==========
     #
@@ -39,38 +39,37 @@
     #    swapSize = 16;
     #  };
     #}
+  ]
+  ++ (map lib.custom.relativeToRoot [
+    #
+    # ========== Required Configs ==========
+    #
+    "hosts/common/core"
 
-    (map lib.custom.relativeToRoot [
-      #
-      # ========== Required Configs ==========
-      #
-      "hosts/common/core"
+    #
+    # ========== Non-Primary Users to Create ==========
+    #
+    # FIXME(starter): the primary user, defined in `nix-config/hosts/common/users`, is added by default, via
+    # `hosts/common/core` above.
+    # To create additional users, specify the path to their config file, as shown in the commented line below, and create/modify
+    # the specified file as required. See `nix-config/hosts/common/users/exampleSecondUser` for more info.
 
-      #
-      # ========== Non-Primary Users to Create ==========
-      #
-      # FIXME(starter): the primary user, defined in `nix-config/hosts/common/users`, is added by default, via
-      # `hosts/common/core` above.
-      # To create additional users, specify the path to their config file, as shown in the commented line below, and create/modify
-      # the specified file as required. See `nix-config/hosts/common/users/exampleSecondUser` for more info.
+    #"hosts/common/users/exampleSecondUser"
 
-      #"hosts/common/users/exampleSecondUser"
-
-      #
-      # ========== Optional Configs ==========
-      #
-      # FIXME(starter): add or remove any optional host-level configuration files the host will use
-      # The following are for example sake only and are not necessarily required.
-      "hosts/common/optional/services/openssh.nix" # allow remote SSH access
-      "hosts/common/optional/services/podman.nix" # podman container runtime
-      "hosts/common/optional/services/tailscale.nix" # tailscale mesh VPN
-      "hosts/common/optional/audio.nix" # pipewire and cli controls
-      "hosts/common/optional/mango.nix" # MangoWC wayland compositor
-      "hosts/common/optional/dank-material-shell.nix" # Quickshell-based desktop shell
-      "hosts/common/optional/dank-material-shell-greeter.nix" # DMS greetd login screen (mango)
-      "hosts/common/optional/bitwarden.nix" # Bitwarden desktop + Zen integration + fingerprint unlock
-    ])
-  ];
+    #
+    # ========== Optional Configs ==========
+    #
+    # FIXME(starter): add or remove any optional host-level configuration files the host will use
+    # The following are for example sake only and are not necessarily required.
+    "hosts/common/optional/services/openssh.nix" # allow remote SSH access
+    "hosts/common/optional/services/podman.nix" # podman container runtime
+    "hosts/common/optional/services/tailscale.nix" # tailscale mesh VPN
+    "hosts/common/optional/audio.nix" # pipewire and cli controls
+    "hosts/common/optional/mango.nix" # MangoWC wayland compositor
+    "hosts/common/optional/dank-material-shell.nix" # Quickshell-based desktop shell
+    "hosts/common/optional/dank-material-shell-greeter.nix" # DMS greetd login screen (mango)
+    "hosts/common/optional/bitwarden.nix" # Bitwarden desktop + Zen integration + fingerprint unlock
+  ]);
 
   #
   # ========== Host Specification ==========
@@ -84,7 +83,11 @@
     username = lib.mkForce "tryy3-fw";
   };
 
-  sops.secrets."wifi/home-psk" = { };
+  sops.secrets."wifi/home-psk" = {
+    mode = "0400";
+    owner = config.users.users.${config.hostSpec.username}.name;
+    group = config.users.users.${config.hostSpec.username}.group;
+  };
 
   sops.templates."networkmanager.env".content = ''
     HOME_PSK=${config.sops.placeholder."wifi/home-psk"}
@@ -92,7 +95,6 @@
 
   networking = {
     networkmanager.enable = true;
-    enableIPv6 = false;
 
     networkmanager.ensureProfiles = {
       environmentFiles = [ config.sops.templates."networkmanager.env".path ];
@@ -111,7 +113,7 @@
           psk = "$HOME_PSK";
         };
         ipv4.method = "auto";
-        ipv6.method = "disabled";
+        ipv6.method = "auto";
       };
     };
   };
@@ -131,10 +133,9 @@
   };
 
   boot.kernelParams = [ "amdgpu.abmlevel=0" ];
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_7_0;
 
-  # Swedish keyboard
-  services.xserver.xkb.layout = "se";
+  # Swedish keyboard (TTY only; Wayland keyboard is configured in the compositor)
   console.keyMap = "sv-latin1";
 
   services.power-profiles-daemon.enable = true;

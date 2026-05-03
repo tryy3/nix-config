@@ -24,6 +24,12 @@
       # see: https://github.com/nix-community/home-manager/pull/3454
       lib = nixpkgs.lib.extend (self: super: { custom = import ./lib { inherit (nixpkgs) lib; }; });
 
+      # Only register real hosts here; template/ISO hosts are excluded to keep `nix flake show` clean.
+      nixosHosts = [
+        "fw-16"
+        "nexer-wsl"
+      ];
+
     in
     {
       #
@@ -46,7 +52,7 @@
             };
             modules = [ ./hosts/nixos/${host} ];
           };
-        }) (builtins.attrNames (builtins.readDir ./hosts/nixos))
+        }) nixosHosts
       );
 
       # darwinConfigurations = builtins.listToAttrs (

@@ -16,22 +16,21 @@ let
   platformModules = "${platform}Modules";
 in
 {
-  imports = lib.flatten [
+  imports = [
     inputs.home-manager.${platformModules}.home-manager
     inputs.sops-nix.${platformModules}.sops
-
-    (map lib.custom.relativeToRoot [
-      "modules/common"
-      "modules/hosts/common"
-      "modules/hosts/${platform}"
-      "hosts/common/core/${platform}.nix"
-      "hosts/common/core/sops.nix" # Core because it's used for backups, mail
-      "hosts/common/core/ssh.nix"
-      #"hosts/common/core/services" # uncomment this line if you add any modules to services directory
-      "hosts/common/users/primary"
-      "hosts/common/users/primary/${platform}.nix"
-    ])
-  ];
+  ]
+  ++ (map lib.custom.relativeToRoot [
+    "modules/common"
+    "modules/hosts/common"
+    "modules/hosts/${platform}"
+    "hosts/common/core/${platform}.nix"
+    "hosts/common/core/sops.nix" # Core because it's used for backups, mail
+    "hosts/common/core/ssh.nix"
+    #"hosts/common/core/services" # uncomment this line if you add any modules to services directory
+    "hosts/common/users/primary"
+    "hosts/common/users/primary/${platform}.nix"
+  ]);
 
   #
   # ========== Core Host Specifications ==========
@@ -98,7 +97,7 @@ in
       auto-optimise-store = true;
       warn-dirty = false;
 
-      allow-import-from-derivation = true;
+      allow-import-from-derivation = false;
 
       experimental-features = [
         "nix-command"

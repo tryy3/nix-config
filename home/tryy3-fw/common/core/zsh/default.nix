@@ -18,13 +18,13 @@
     enableBashIntegration = true;
     enableZshIntegration = true;
     options = [
-      "--cmd cd" # replacce cd with z and zi (via cdi)
+      "--cmd cd" # replace cd with z and zi (via cdi)
     ];
   };
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
-    defaultCommand = "fd --type f --hiden --follow --exclude .git";
+    defaultCommand = "fd --type f --hidden --follow --exclude .git";
     defaultOptions = [
       "--height 40%;"
       "--border"
@@ -78,7 +78,7 @@
       # Enabling too many plugins will slowdown shell startup
       plugins = [
         "git"
-        "sudo" # Press Esc twice to get previous command preffixed with sudo
+        "sudo" # Press Esc twice to get previous command prefixed with sudo
         "extract"
         "command-not-found"
       ];
@@ -89,6 +89,6 @@
       '';
     };
 
-    shellAliases = import ./aliases.nix { inherit osConfig; }; # TODO: look at oxConfig from nix-config
+    shellAliases = import ./aliases.nix { inherit osConfig; };
   };
 }

@@ -83,6 +83,18 @@ in
   # Power management
   services.upower.enable = true;
 
+  # ── Power management (logind) ─────────────────────────────────────────────
+  # Power button: ignore accidental short presses, shutdown only on long press (~3s)
+  # Lid close: suspend to RAM (fast resume, ~1-3W draw while sleeping)
+  # Idle is managed by swayidle (media-aware), not logind
+  services.logind.settings.Login = {
+    HandlePowerKey = "ignore";
+    HandlePowerKeyLongPress = "poweroff";
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "suspend";
+    IdleAction = "ignore";
+  };
+
   # HM wiring
   home-manager.users.${username}.imports = [ ./home.nix ];
 }

@@ -8,6 +8,7 @@
     ./playerctl.nix
     ./mango.nix
     ./dms.nix
+    ./swayidle.nix
   ];
 
   home.packages = [

@@ -1,5 +1,6 @@
 - [x] With my current setup, when updating and such my whole Zen history, cookies and such get deleted. For example when we made recent changes to theming all the histroy got deleted, including extensions
-- [ ] Look over my power button and it's options, currently when accidentally clicking it, it shutsdown
+- [x] Look over my power button and it's options, currently when accidentally clicking it, it shutsdown
+    - [ ] Potentially fixed, but it's possible that when it goes hibernate it actually "shutsdown", I got logged out which is fine but all my windows were closed
     - We need to first understand the different terminologies and linux options before continue here, coming from Windows we have lock screen, hibernate, sleep and such, what are the real options here in linux?
     - This is the expected behaviour regardless if we are plugged in or not
         - When lid get closed I expect to first get "locked out" (similar to the behvaiour of SUPER + L) and then go into hibernate/sleep mode
@@ -15,3 +16,4 @@
     - Automatic GC?
     - last X amount of snapshots
 - [ ] Profile pic
+- [ ] Check opencode / agents to see if there is a way to "automatically" switch "agent", for example if I use deep research and we come up with a lot of findings, is there a way for the agent to ask for permission to switch agent so that it can start executing things?

@@ -1,4 +1,4 @@
-- [ ] With my current setup, when updating and such my whole Zen history, cookies and such get deleted. For example when we made recent changes to theming all the histroy got deleted, including extensions
+- [x] With my current setup, when updating and such my whole Zen history, cookies and such get deleted. For example when we made recent changes to theming all the histroy got deleted, including extensions
 - [ ] Look over my power button and it's options, currently when accidentally clicking it, it shutsdown
     - We need to first understand the different terminologies and linux options before continue here, coming from Windows we have lock screen, hibernate, sleep and such, what are the real options here in linux?
     - This is the expected behaviour regardless if we are plugged in or not
@@ -8,9 +8,10 @@
         - auto hibernate - after 10 minutes the computer should go into "sleep", turn off screen and wait for input
 - [ ] Consider switching to invert swipes
 - [ ] Look over "warnings" on rebuild, for example GIT
-- [ ] Look over FIXME comments and darwin
-    - [ ] We should be able to remove darwin without any complications
+- [x] Look over FIXME comments and darwin
+    - [x] We should be able to remove darwin without any complications
 - [ ] Research if there is any practical solution to switch from "tryy3-fw" to "tryy3" - ideally I would like 1 user per machine
 - [ ] NixOS Cleanup
     - Automatic GC?
     - last X amount of snapshots
+- [ ] Profile pic

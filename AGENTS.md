@@ -12,7 +12,7 @@ If you determine that a build or switch is needed, **stop and ask the user to ru
 
 ## What This Repo Is
 
-A flake-based NixOS configuration (with nix-darwin support commented out). Manages multiple hosts with shared modules, home-manager, sops-nix secrets, and custom overlays.
+A flake-based NixOS configuration using the **light dendritic pattern**. Manages multiple hosts (`fw-16`, `nexer-wsl`) with a single user (`tryy3`), feature-based modularity, and explicit imports for full traceability.
 
 ## Key Commands
 
@@ -34,35 +34,107 @@ Tests run via `nix flake check` (bats tests in `tests/`).
 
 ## Architecture
 
+### Design Philosophy: Light Dendritic
+
+The config follows a **feature-based** (dendritic) pattern rather than a host-centric one:
+
+| Traditional | This Config |
+|---|---|
+| Organized by **WHERE** things apply (`hosts/<hostname>/`) | Organized by **WHAT** things do (`modules/features/shell/`, `modules/features/desktop/`) |
+| "What does machine X need?" → list imports | "Which features does this machine require?" → declare feature list |
+| Values shared via `specialArgs` pass-through | Values shared via top-level `config` and `hostSpec` |
+| Auto-discovery via `scanPaths` | **Explicit imports** for full traceability |
+
 ### Directory Layout
 
-- **`hosts/nixos/<hostname>/default.nix`** — NixOS host definitions. Auto-discovered by `builtins.readDir ./hosts/nixos`, so adding a directory here automatically registers a new `nixosConfigurations` entry.
-- **`home/<username>/<hostname>.nix`** — Per-user, per-host home-manager config. Wired in from `hosts/common/users/primary/default.nix` via `hostSpec.username` and `hostSpec.hostName`.
-- **`home/<username>/common/`** — Shared home-manager config for that user (core + optional).
-- **`modules/common/`** — Reusable NixOS modules shared across platforms. Auto-imported via `lib.custom.scanPaths`.
-- **`modules/hosts/common/`** — Host-level modules shared across NixOS and Darwin. Auto-imported.
-- **`modules/hosts/nixos/`** — NixOS-specific host modules. Auto-imported.
-- **`modules/home/`** — Home-manager modules. Auto-imported.
-- **`pkgs/common/`** — Custom packages. Auto-discovered via `packagesFromDirectoryRecursive`.
-- **`overlays/default.nix`** — Overlays: adds custom packages, `pkgs.stable.*`, `pkgs.unstable.*`.
-- **`lib/default.nix`** — Custom lib functions: `relativeToRoot`, `scanPaths`, `scanPathsFilterPlatform`.
-- **`nixos-installer/`** — Separate flake for remote NixOS installation.
+```
+nix-config/
+├── flake.nix                          # Inputs + host registration (nixosHosts array)
+├── lib/default.nix                    # Custom lib functions (relativeToRoot, scanPaths)
+├── overlays/default.nix               # Package overlays (stable, unstable, custom pkgs)
+├── pkgs/common/                       # Custom packages (auto-discovered)
+│
+├── modules/
+│   ├── base/                          # Always applied to every host
+│   │   ├── default.nix                # Nix settings, overlays, HM defaults, NixOS base
+│   │   ├── home.nix                   # Core HM config (packages, env vars, gpg)
+│   │   ├── user.nix                   # User "tryy3" creation, SSH keys, groups
+│   │   ├── sops.nix                   # System-level sops/age key bootstrapping
+│   │   └── keys/                      # SSH public keys for authorized_keys
+│   │
+│   ├── features/                      # Feature modules (the "dendritic" part)
+│   │   ├── host-spec.nix              # hostSpec option definitions (shared by all)
+│   │   ├── shell/                     # zsh, starship, fzf, zoxide
+│   │   │   ├── default.nix            # NixOS-level + HM wiring
+│   │   │   ├── home.nix               # HM-level config
+│   │   │   ├── aliases.nix
+│   │   │   ├── plugins.nix
+│   │   │   └── zshrc
+│   │   ├── git/
+│   │   ├── fonts/
+│   │   ├── ghostty/
+│   │   ├── direnv/
+│   │   ├── bat/
+│   │   ├── ssh/
+│   │   ├── sops/
+│   │   ├── desktop/                   # Wayland compositor + audio + GPU
+│   │   │   ├── default.nix
+│   │   │   ├── home.nix
+│   │   │   ├── mango.nix
+│   │   │   ├── dms.nix
+│   │   │   ├── greeter.nix
+│   │   │   ├── gtk.nix
+│   │   │   └── playerctl.nix
+│   │   ├── browsers/                  # Firefox, Zen, Chromium, Vesktop
+│   │   ├── zed/
+│   │   ├── openssh/
+│   │   ├── podman/
+│   │   ├── tailscale/
+│   │   └── kubernetes/
+│   │
+│   └── hosts/                         # Host declarations (feature lists)
+│       ├── fw-16.nix                  # "fw-16 wants: base + desktop + shell + ..."
+│       └── nexer-wsl.nix              # "nexer-wsl wants: base + shell + ..."
+│
+├── hosts/                             # Hardware configs only (no feature logic)
+│   └── nixos/
+│       ├── fw-16/
+│       │   ├── default.nix            # GPU, bootloader, WiFi, kernel params
+│       │   └── hardware-configuration.nix
+│       └── nexer-wsl/
+│           ├── default.nix            # WSL enable, nix-ld, stateVersion
+│           └── hermes.nix
+│
+├── home/tryy3/                        # Host-specific HM overrides (usually empty)
+│   ├── fw-16.nix
+│   └── nexer-wsl.nix
+│
+├── nixos-installer/                   # Separate flake for remote NixOS installation
+└── docs/
+```
 
 ### Conventions
 
-- **`lib.custom.relativeToRoot`** — Used everywhere to reference files from repo root (e.g., `"hosts/common/core"`). Equivalent to `lib.path.append ../.` applied to the string.
-- **`lib.custom.scanPaths`** — Auto-imports all `.nix` files and directories (excluding `default.nix`) from a given path. Used in module `default.nix` files.
-- **`lib.custom.scanPathsFilterPlatform`** — Like `scanPaths` but excludes `darwin.nix`/`nixos.nix` files that don't match the current platform.
-- **`hostSpec`** — Custom option module (`modules/common/host-spec.nix`) that declares host metadata (username, hostname, email, isMinimal, isWork, etc.). Set per-host, consumed everywhere.
-- **Platform-specific files** — Use `nixos.nix` or `darwin.nix` suffixes. `scanPathsFilterPlatform` filters them automatically.
-- **`#FIXME(starter)`** — Comments throughout the repo mark places that need customization for your setup.
+- **`lib.custom.relativeToRoot`** — References files from repo root (e.g., `"hosts/common/core"`). Equivalent to `lib.path.append ../.` applied to the string.
+- **`hostSpec`** — Custom option module (`modules/features/host-spec.nix`) that declares host metadata (username, hostname, email, isMinimal, isWork, etc.). Set per-host in `modules/hosts/<hostname>.nix`, consumed everywhere via `config.hostSpec`.
+- **Feature module structure** — Each feature directory contains:
+  - `default.nix` — NixOS-level config + HM wiring (`home-manager.users.${username}.imports = [ ./home.nix ]`)
+  - `home.nix` — Home Manager-level config (optional, only if the feature needs user-level config)
+  - Additional `.nix` files — Sub-modules or data files (aliases, plugins, etc.)
+- **Explicit imports** — No `scanPaths` auto-discovery for modules. Every feature is explicitly imported by each host that needs it.
+- **`pkgs.stable` / `pkgs.unstable`** — Available via overlays. Use `pkgs.stable.<pkg>` or `pkgs.unstable.<pkg>` to pin specific packages.
 
 ### How Hosts Are Wired
 
-1. `flake.nix` auto-discovers hosts from `hosts/nixos/` directories.
-2. Each host's `default.nix` imports `hosts/common/core`, which imports `modules/common`, `modules/hosts/common`, `modules/hosts/nixos`, and `hosts/common/users/primary`.
-3. `hosts/common/users/primary/default.nix` sets up the user and imports `home/<username>/<hostname>.nix` for home-manager.
-4. Home-manager configs import `modules/home` and use `scanPathsFilterPlatform` for platform filtering.
+1. `flake.nix` lists hosts in the `nixosHosts` array (see `nixosHosts` variable).
+2. Each host entry points to `modules/hosts/<hostname>.nix` — the host's feature declaration file.
+3. The host declaration file explicitly imports:
+   - `../base` — always applied (Nix settings, user creation, sops, core HM)
+   - Feature modules (e.g., `../features/shell`, `../features/git`)
+   - Hardware config (`../../hosts/nixos/<hostname>`)
+4. `modules/base/default.nix` imports `host-spec.nix`, `user.nix`, `sops.nix`, and wires Home Manager.
+5. `modules/base/user.nix` creates the user and wires `modules/base/home.nix` as the base HM config.
+6. Each feature module wires its own HM config via `home-manager.users.${username}.imports`.
 
 ## Secrets (sops-nix)
 
@@ -76,20 +148,282 @@ Tests run via `nix flake check` (bats tests in `tests/`).
 
 `.pre-commit-config.yaml` is **auto-generated by git-hooks.nix** — do not edit it directly. Configure hooks in `checks.nix`. Active hooks: nixfmt-rfc-style, deadnix (with `--no-lambda-arg`), shellcheck, shfmt, check-added-large-files, and others.
 
-## Overlays
+## Adding a New Feature
 
-`pkgs.stable` and `pkgs.unstable` are available in all NixOS/home-manager configs via overlays in `overlays/default.nix`. Use `pkgs.stable.<pkg>` or `pkgs.unstable.<pkg>` to pin specific packages.
+Features are self-contained modules under `modules/features/`. Each feature configures both NixOS system settings and Home Manager user settings.
 
-## Adding a New Package
+### Step 1: Create the feature directory
 
-1. Add to `home/<username>/common/core/default.nix` under `home.packages` using `builtins.attrValues { inherit (pkgs) ...; }`.
-2. For a custom package, add a directory under `pkgs/common/` with a `default.nix` — it's auto-discovered.
+```bash
+mkdir -p modules/features/<feature-name>/
+```
+
+### Step 2: Create `default.nix` (NixOS-level)
+
+This file handles system-level config and wires the HM config:
+
+```nix
+# modules/features/<feature-name>/default.nix
+{ config, ... }:
+let
+  username = config.hostSpec.username;
+in
+{
+  # === NixOS system config ===
+  # e.g., programs.foo.enable = true;
+  # e.g., services.bar.enable = true;
+
+  # === Wire Home Manager config ===
+  home-manager.users.${username}.imports = [ ./home.nix ];
+}
+```
+
+If the feature has **no NixOS-level config** (only HM), the `default.nix` can be minimal:
+
+```nix
+# modules/features/<feature-name>/default.nix
+{ config, ... }:
+let
+  username = config.hostSpec.username;
+in
+{
+  home-manager.users.${username}.imports = [ ./home.nix ];
+}
+```
+
+### Step 3: Create `home.nix` (HM-level)
+
+```nix
+# modules/features/<feature-name>/home.nix
+{ config, lib, pkgs, osConfig, ... }:
+let
+  hostSpec = osConfig.hostSpec;
+in
+{
+  # === Packages ===
+  home.packages = with pkgs; [ ... ];
+
+  # === Program config ===
+  programs.foo = {
+    enable = true;
+    # ... settings ...
+  };
+}
+```
+
+**Note:** Use `osConfig.hostSpec` to access host metadata from within HM modules.
+
+### Step 4: Add the feature to host(s)
+
+Edit `modules/hosts/<hostname>.nix` and add the feature to the `imports` list:
+
+```nix
+# modules/hosts/fw-16.nix
+{ ... }:
+{
+  imports = [
+    # ... existing imports ...
+    ../features/<feature-name>
+  ];
+}
+```
+
+### Step 5: Verify
+
+```bash
+nix fmt
+just check
+```
+
+### Feature with Sub-Modules
+
+If a feature has multiple sub-components (e.g., `desktop` has `mango.nix`, `dms.nix`, `gtk.nix`), each sub-module is a separate file imported by the host:
+
+```nix
+# modules/hosts/fw-16.nix
+imports = [
+  ../features/desktop           # base desktop config
+  ../features/desktop/greeter.nix  # greeter sub-module
+];
+```
+
+### Feature Variants (Stable vs Experimental)
+
+When two hosts need the same feature but with different configs, use the variant pattern:
+
+```
+modules/features/<feature>/
+├── common.nix              # Shared base config
+├── stable/
+│   └── default.nix         # Imports common.nix + stable overrides
+└── experimental/
+    └── default.nix         # Imports common.nix + experimental overrides
+```
+
+The host chooses which variant to import:
+
+```nix
+# modules/hosts/fw-16.nix (stable)
+imports = [ ../features/<feature>/stable ];
+
+# modules/hosts/experiment-laptop.nix (experimental)
+imports = [ ../features/<feature>/experimental ];
+```
+
+**When to use variants vs host-level overrides:**
+- **Small tweak** (1-2 settings) → override directly in the host file
+- **Significant divergence** (different packages, experimental features) → create a variant
+- **3+ hosts share the same variant** → create a variant (reusable "profile")
+- **Temporary experiment** (< 1 week) → host-level override
 
 ## Adding a New Host
 
-1. Create `hosts/nixos/<hostname>/default.nix` (copy from `host.nix` or an existing host).
-2. Create `home/<username>/<hostname>.nix` (copy from an existing one).
-3. The host is auto-discovered by the flake — no need to edit `flake.nix`.
+### Step 1: Create hardware config
+
+```bash
+mkdir -p hosts/nixos/<hostname>/
+# Copy hardware-configuration.nix from the machine
+```
+
+```nix
+# hosts/nixos/<hostname>/default.nix
+{ inputs, ... }:
+{
+  imports = [
+    ./hardware-configuration.nix
+    # ... hardware-specific modules ...
+  ];
+
+  system.stateVersion = "24.11";
+}
+```
+
+### Step 2: Create host declaration with feature list
+
+```nix
+# modules/hosts/<hostname>.nix
+{ ... }:
+{
+  imports = [
+    # === Base (always needed) ===
+    ../base
+
+    # === Shared features ===
+    ../features/shell
+    ../features/git
+    ../features/fonts
+    ../features/ghostty
+    ../features/direnv
+    ../features/bat
+    ../features/ssh
+    ../features/sops
+
+    # === Add host-specific features here ===
+
+    # === Hardware + host-specific config ===
+    ../../hosts/nixos/<hostname>
+  ];
+
+  hostSpec = {
+    hostName = "<hostname>";
+    # Optional: nixConfigPath = "/home/tryy3/nix-config";
+  };
+}
+```
+
+### Step 3: Register in flake.nix
+
+Add the hostname to the `nixosHosts` array in `flake.nix`:
+
+```nix
+nixosHosts = [
+  "fw-16"
+  "nexer-wsl"
+  "<hostname>"
+];
+```
+
+### Step 4: Create HM override file (optional)
+
+```nix
+# home/tryy3/<hostname>.nix
+{ ... }:
+{
+  # Host-specific HM overrides that don't belong in any feature module.
+  # Usually empty — most config should live in feature modules.
+}
+```
+
+### Step 5: Verify
+
+```bash
+nix fmt
+just check
+```
+
+## Adding a New Package
+
+1. **Existing nixpkgs package:** Add to the appropriate feature module's `home.packages` in its `home.nix`, or to `modules/base/home.nix` if it's a core package needed on all hosts.
+2. **Custom package:** Add a directory under `pkgs/common/` with a `default.nix` — it's auto-discovered and available via the overlay.
+
+## Host-Specific Overrides
+
+When a feature needs different behavior per host, there are three approaches:
+
+### 1. Conditional in the Feature Module
+
+```nix
+# modules/features/shell/aliases.nix
+{ osConfig, lib, ... }:
+let
+  hostName = osConfig.hostSpec.hostName;
+in
+{
+  ls = "eza";
+  wsl-open = lib.mkIf (hostName == "nexer-wsl") "explorer.exe .";
+}
+```
+
+### 2. Host-Level Override
+
+```nix
+# modules/hosts/nexer-wsl.nix
+{ lib, ... }:
+{
+  imports = [ ../base ../features/shell /* ... */ ];
+
+  hostSpec = { hostName = "nexer-wsl"; };
+
+  # Override shell aliases just for this host
+  home-manager.users.tryy3.programs.zsh.shellAliases = {
+    wsl-open = "explorer.exe .";
+  };
+}
+```
+
+### 3. Using `hostSpec` Flags
+
+Define flags in `hostSpec` and use them in feature modules:
+
+```nix
+# modules/hosts/nexer-wsl.nix
+hostSpec = {
+  hostName = "nexer-wsl";
+  isWsl = true;
+};
+
+# modules/features/shell/default.nix
+{ config, lib, ... }:
+let
+  hostSpec = config.hostSpec;
+in
+{
+  home-manager.users.${hostSpec.username}.programs.zsh.plugins =
+    lib.optionals (!hostSpec.isWsl) [
+      { name = "zsh-term-title"; src = "..."; }
+    ];
+}
+```
 
 ## Gotchas
 
@@ -99,3 +433,5 @@ Tests run via `nix flake check` (bats tests in `tests/`).
 - **Git submodules are forbidden** by pre-commit hooks (except `.agents/skills/nixos`).
 - **`.pre-commit-config.yaml` is generated** — edit `checks.nix` instead.
 - **`result` and `latest.iso` are gitignored** — build outputs won't pollute the repo.
+- **`home/tryy3/<hostname>.nix` is for overrides only** — most HM config should live in feature modules, not in these files.
+- **`scanPaths` is deprecated for module discovery** — use explicit imports in host declarations instead.

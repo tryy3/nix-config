@@ -1,0 +1,88 @@
+# modules/features/desktop/default.nix
+#
+# Desktop feature: Wayland compositor + desktop shell + audio + GPU support.
+{
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
+let
+  username = config.hostSpec.username;
+in
+{
+  imports = [
+    inputs.mango.nixosModules.mango
+  ];
+
+  # Graphics support
+  hardware.graphics.enable = true;
+
+  # Dconf for GTK theming
+  programs.dconf.enable = true;
+
+  # MangoWC compositor
+  programs.mango.enable = true;
+
+  # DMS system dependencies (polkit, accounts-daemon, geoclue2, fprintd)
+  services.power-profiles-daemon.enable = true;
+  services.accounts-daemon.enable = true;
+  services.geoclue2.enable = true;
+  security.polkit.enable = true;
+  services.fprintd.enable = true;
+  security.pam.services.greetd.fprintAuth = false;
+  security.pam.services.login.fprintAuth = true;
+  security.pam.services.sudo.fprintAuth = true;
+
+  # Audio (PipeWire)
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber = {
+      enable = true;
+      extraConfig = {
+        "10-fw16-speaker-profile" = {
+          "wireplumber.settings" = {
+            "device.restore-profile" = false;
+          };
+          "monitor.alsa.rules" = [
+            {
+              matches = [
+                { "device.name" = "alsa_card.pci-0000_c2_00.6"; }
+              ];
+              actions = {
+                update-props = {
+                  "device.profile" = "HiFi (Mic1, Mic2, Speaker)";
+                };
+              };
+            }
+          ];
+        };
+      };
+    };
+    jack.enable = true;
+  };
+
+  # Bitwarden desktop + browser integration + biometric unlock
+  environment.systemPackages = [
+    pkgs.bitwarden-desktop
+    pkgs.seahorse
+  ];
+  environment.etc."mozilla/native-messaging-hosts/com.8bit.bitwarden.json".source =
+    "${pkgs.bitwarden-desktop}/lib/mozilla/native-messaging-hosts/com.8bit.bitwarden.json";
+  services.gnome.gnome-keyring.enable = true;
+  services.gnome.gcr-ssh-agent.enable = false;
+  security.pam.services.greetd.enableGnomeKeyring = true;
+  security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.polkit-1.fprintAuth = true;
+
+  # Power management
+  services.upower.enable = true;
+
+  # HM wiring
+  home-manager.users.${username}.imports = [ ./home.nix ];
+}

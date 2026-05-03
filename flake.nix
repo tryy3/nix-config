@@ -50,7 +50,7 @@
               inherit inputs outputs lib;
               isDarwin = false;
             };
-            modules = [ ./hosts/nixos/${host} ];
+            modules = [ ./modules/hosts/${host}.nix ];
           };
         }) nixosHosts
       );

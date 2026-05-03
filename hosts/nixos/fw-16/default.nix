@@ -1,12 +1,7 @@
-# This is an example nixos hosts module.
-# They will automatically be imported below.
-
-#############################################################
+# hosts/nixos/fw-16/default.nix
 #
-#  fw-16 - Framework Laptop
-#
-###############################################################
-
+# fw-16 hardware and host-specific configuration.
+# Feature imports are in modules/hosts/fw-16.nix.
 {
   lib,
   inputs,
@@ -16,73 +11,12 @@
 }:
 {
   imports = [
-    #
-    # ========== Hardware ==========
-    #
     ./hardware-configuration.nix
 
     inputs.hardware.nixosModules.framework-16-amd-ai-300-series-nvidia
-    inputs.nix-index-database.nixosModules.default
-    ##
-    ## ========== Disk Layout ==========
-    ##
-    #inputs.disko.nixosModules.disko
-    ## FIXME(starter): modify with the disko spec file you want to use.
-    #(lib.custom.relativeToRoot "hosts/common/disks/btrfs-disk.nix")
-    ## FIXME(starter): modify the options below to inform disko of the host's disk path and swap requirements.
-    ## IMPORTANT: nix-config-starter assumes a single disk per host. If you require more disks, you
-    ## must modify or create new dikso specs.
-    #{
-    #  _module.args = {
-    #    disk = "/dev/nvme0n1";
-    #    withSwap = true;
-    #    swapSize = 16;
-    #  };
-    #}
-  ]
-  ++ (map lib.custom.relativeToRoot [
-    #
-    # ========== Required Configs ==========
-    #
-    "hosts/common/core"
+  ];
 
-    #
-    # ========== Non-Primary Users to Create ==========
-    #
-    # FIXME(starter): the primary user, defined in `nix-config/hosts/common/users`, is added by default, via
-    # `hosts/common/core` above.
-    # To create additional users, specify the path to their config file, as shown in the commented line below, and create/modify
-    # the specified file as required. See `nix-config/hosts/common/users/exampleSecondUser` for more info.
-
-    #"hosts/common/users/exampleSecondUser"
-
-    #
-    # ========== Optional Configs ==========
-    #
-    # FIXME(starter): add or remove any optional host-level configuration files the host will use
-    # The following are for example sake only and are not necessarily required.
-    "hosts/common/optional/services/openssh.nix" # allow remote SSH access
-    "hosts/common/optional/services/podman.nix" # podman container runtime
-    "hosts/common/optional/services/tailscale.nix" # tailscale mesh VPN
-    "hosts/common/optional/audio.nix" # pipewire and cli controls
-    "hosts/common/optional/mango.nix" # MangoWC wayland compositor
-    "hosts/common/optional/dank-material-shell.nix" # Quickshell-based desktop shell
-    "hosts/common/optional/dank-material-shell-greeter.nix" # DMS greetd login screen (mango)
-    "hosts/common/optional/bitwarden.nix" # Bitwarden desktop + Zen integration + fingerprint unlock
-  ]);
-
-  #
-  # ========== Host Specification ==========
-  #
-
-  # FIXME(starter): declare any host-specific hostSpec options. Note that hostSpec options pertaining to
-  # more than one host can be declared in `nix-config/hosts/common/core/` see the default.nix file there
-  # for examples.
-  hostSpec = {
-    hostName = "fw-16";
-    username = lib.mkForce "tryy3-fw";
-  };
-
+  # WiFi profile (uses sops secrets)
   sops.secrets."wifi/home-psk" = {
     mode = "0400";
     owner = config.users.users.${config.hostSpec.username}.name;
@@ -121,50 +55,25 @@
   boot.loader = {
     systemd-boot = {
       enable = true;
-      # When using plymouth, initrd can expand by a lot each time, so limit how many we keep around
       configurationLimit = lib.mkDefault 10;
     };
     efi.canTouchEfiVariables = true;
     timeout = 3;
   };
 
-  boot.initrd = {
-    systemd.enable = true;
-  };
-
+  boot.initrd.systemd.enable = true;
   boot.kernelParams = [ "amdgpu.abmlevel=0" ];
   boot.kernelPackages = pkgs.linuxPackages_7_0;
 
   # Swedish keyboard (TTY only; Wayland keyboard is configured in the compositor)
   console.keyMap = "sv-latin1";
 
-  services.power-profiles-daemon.enable = true;
-  services.upower.enable = true;
-
-  hardware.graphics.enable = true;
-  # NOTE: lspci shows NVIDIA at 0000:c1:00.0 (193) and AMD iGPU at 0000:c2:00.0
-  # (194). The previous values had these swapped, which caused the wayland
-  # session to land on the wrong GPU and lose its output. Verify with
-  # `lspci | grep -E 'VGA|3D'` after a kernel update.
+  # NVIDIA hybrid graphics
   hardware.nvidia.prime = {
     amdgpuBusId = "PCI:194:0:0"; # iGPU (AMD, 0xC2)
     nvidiaBusId = "PCI:193:0:0"; # dGPU (NVIDIA, 0xC1)
   };
 
-  # Enable dconf for GTK theming and other dconf-based settings
-  programs.dconf.enable = true;
-
   # https://wiki.nixos.org/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "24.11";
-
-  #
-  # ========== nix-index-database ==========
-  #
-  # Enable nix-index with pre-built database from nix-community
-  programs.nix-index-database = {
-    enable = true;
-    # Also install comma for running commands without installing them first
-    # Example: `, cowsay hello` will temporarily use the cowsay package
-    comma.enable = true;
-  };
 }

@@ -145,9 +145,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # MangoWC - Wayland window manager
+    # MangoWC - Wayland window manager (stable upstream)
     mango = {
       url = "github:mangowm/mango";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # MangoWC-ext - Extended fork with canvas, dwindle, and touch features
+    mango-ext = {
+      url = "github:ernestoCruz05/mango-ext";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

@@ -1,9 +1,14 @@
 # modules/features/desktop/default.nix
 #
-# Desktop feature: Wayland compositor + desktop shell + audio + GPU support.
+# Desktop feature: Wayland desktop shell + audio + GPU support.
+#
+# NOTE: The MangoWC compositor is NOT included here — it has its own variant
+# modules so you can choose between stable and ext. Add one of these to your
+# host declaration:
+#   ../features/desktop/mango/stable   — upstream mango
+#   ../features/desktop/mango/ext      — mango-ext fork (canvas, dwindle, touch)
 {
   config,
-  inputs,
   pkgs,
   ...
 }:
@@ -11,18 +16,11 @@ let
   username = config.hostSpec.username;
 in
 {
-  imports = [
-    inputs.mango.nixosModules.mango
-  ];
-
   # Graphics support
   hardware.graphics.enable = true;
 
   # Dconf for GTK theming
   programs.dconf.enable = true;
-
-  # MangoWC compositor
-  programs.mango.enable = true;
 
   # DMS system dependencies (polkit, accounts-daemon, geoclue2, fprintd)
   services.power-profiles-daemon.enable = true;

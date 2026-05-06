@@ -133,6 +133,24 @@
         "type": "github"
       }
     },
+    "flake-parts_3": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib_2"
+      },
+      "locked": {
+        "lastModified": 1749398372,
+        "narHash": "sha256-tYBdgS56eXYaWVW3fsnPQ/nFlgWi/Z2Ymhyu21zVM98=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "9305fe4e5c2a6fcf5ba6a3ff155720fbe4076569",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
     "gitignore": {
       "inputs": {
         "nixpkgs": [
@@ -235,6 +253,28 @@
         "type": "github"
       }
     },
+    "mango-ext": {
+      "inputs": {
+        "flake-parts": "flake-parts_3",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "scenefx": "scenefx_2"
+      },
+      "locked": {
+        "lastModified": 1778012356,
+        "narHash": "sha256-w6CjsTh6rklgzv1bInNpHnrKkBZ8iWw/l4b+r9QryCY=",
+        "owner": "ernestoCruz05",
+        "repo": "mango-ext",
+        "rev": "342c13d946bc6e17a1a6f0c76265deaede69c967",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ernestoCruz05",
+        "repo": "mango-ext",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -277,10 +317,10 @@
     },
     "nix-secrets": {
       "locked": {
-        "lastModified": 1777816213,
-        "narHash": "sha256-UTq6UANf11TxA9VBUpOWnWsqVk7du7R5CTtW3HmFSlE=",
+        "lastModified": 1777903057,
+        "narHash": "sha256-+ztISV89IudBan2JJ028nD7cegKEQfTP35My+LyKns8=",
         "ref": "simple",
-        "rev": "056cca2e94f55807704500b6aabfe32cad21d3b8",
+        "rev": "2d32d0031677ec1340c31411f66aa074e14e67a4",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/tryy3/nix-secrets.git"
@@ -346,6 +386,21 @@
       }
     },
     "nixpkgs-lib": {
+      "locked": {
+        "lastModified": 1748740939,
+        "narHash": "sha256-rQaysilft1aVMwF14xIdGS3sj1yHlI6oKQNBRTF40cc=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "656a64127e9d791a334452c6b6606d17539476e2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixpkgs-lib_2": {
       "locked": {
         "lastModified": 1748740939,
         "narHash": "sha256-rQaysilft1aVMwF14xIdGS3sj1yHlI6oKQNBRTF40cc=",
@@ -570,6 +625,7 @@
         "hermes-agent": "hermes-agent",
         "home-manager": "home-manager",
         "mango": "mango",
+        "mango-ext": "mango-ext",
         "nix-darwin": "nix-darwin",
         "nix-index-database": "nix-index-database",
         "nix-secrets": "nix-secrets",
@@ -587,6 +643,27 @@
       "inputs": {
         "nixpkgs": [
           "mango",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1750785057,
+        "narHash": "sha256-tGX6j4W91rcb+glXJo43sjPI9zQvPotonknG1BdihR4=",
+        "owner": "wlrfx",
+        "repo": "scenefx",
+        "rev": "3a6cfb12e4ba97b43326357d14f7b3e40897adfc",
+        "type": "github"
+      },
+      "original": {
+        "owner": "wlrfx",
+        "repo": "scenefx",
+        "type": "github"
+      }
+    },
+    "scenefx_2": {
+      "inputs": {
+        "nixpkgs": [
+          "mango-ext",
           "nixpkgs"
         ]
       },

@@ -1,5 +1,12 @@
-# Home-manager configuration for MangoWC.
-# Pair with hosts/common/optional/mango.nix for the system-level enablement.
+# modules/features/desktop/mango/common.nix
+#
+# Shared Home Manager configuration for MangoWC.
+# This file contains all settings, keybinds, window rules, etc. that are
+# common to both the stable (upstream) and ext (mango-ext) variants.
+#
+# Do NOT import this file directly — use one of the variant directories:
+#   ../features/desktop/mango/stable   (upstream mango)
+#   ../features/desktop/mango/ext      (mango-ext fork)
 #
 # NOTE on structure:
 # Upstream config (https://github.com/DreamMaoMao/mango-config) splits config
@@ -8,17 +15,8 @@
 # `~/.config/mango/config.conf` from `settings`, so we inline everything here.
 # Repeating keys (`bind`, `windowrule`, `env`, etc.) are expressed as Nix lists,
 # which the module emits as duplicate `key=value` lines.
+{ pkgs, config, ... }:
 {
-  inputs,
-  pkgs,
-  config,
-  ...
-}:
-{
-  imports = [
-    inputs.mango.hmModules.mango
-  ];
-
   # Screenshot tools: grim (capture) + slurp (region select) + satty (annotate)
   # satty uses unstable to get floating-hack support (requires >= 0.20.1)
   home.packages =
@@ -167,7 +165,7 @@
       warpcursor = 1;
       focus_cross_monitor = 0;
       focus_cross_tag = 0;
-      circle_layout = "tile,scroller";
+      # circle_layout is variant-specific (different layouts available per build)
       enable_floating_snap = 1;
       snap_distance = 50;
       cursor_size = 24;
@@ -195,8 +193,9 @@
       left_handed = 0;
       middle_button_emulation = 0;
       swipe_min_threshold = 1;
-      accel_profile = 2;
-      accel_speed = 0.0;
+      # accel_profile/accel_speed are variant-specific:
+      #   stable:  accel_profile / accel_speed
+      #   ext:     trackpad_accel_profile / trackpad_accel_speed
       # scroll_button = 274;
       # scroll_method = 1;
 
@@ -276,7 +275,7 @@
 
         # switch window focus
         "SUPER,Tab,focusstack,next"
-        "SUPER,u,focuslast"
+        # SUPER+u is variant-specific (focuslast in stable, canvas_fill_viewport in ext)
         "ALT,Left,focusdir,left"
         "ALT,Right,focusdir,right"
         "ALT,Up,focusdir,up"
@@ -308,7 +307,7 @@
         "ALT,f,togglefullscreen,"
         "ALT+SHIFT,f,togglefakefullscreen,"
         "SUPER,i,minimized,"
-        "SUPER,o,toggleoverlay,"
+        # SUPER+o is variant-specific (toggleoverlay in stable, toggleminimap in ext)
         "SUPER+SHIFT,I,restore_minimized"
         "ALT,z,toggle_scratchpad"
 

@@ -20,6 +20,7 @@
 
     # === Desktop features ===
     ../features/desktop
+    ../features/desktop/mango/ext # Switch to mango/ext to try the extended fork
     ../features/desktop/greeter.nix
     ../features/browsers
     ../features/zed

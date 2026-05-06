@@ -174,6 +174,8 @@ in
           leftWidgets = [
             "launcherButton"
             "workspaceSwitcher"
+            "layout"
+            "LayoutSwitch"
             "focusedWindow"
           ];
           centerWidgets = [

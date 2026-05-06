@@ -6,7 +6,6 @@
   imports = [
     ./gtk.nix
     ./playerctl.nix
-    ./mango.nix
     ./dms.nix
     ./swayidle.nix
   ];

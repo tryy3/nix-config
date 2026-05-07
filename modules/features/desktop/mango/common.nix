@@ -159,7 +159,7 @@
       xwayland_persistence = 1;
       syncobj_enable = 0;
       no_border_when_single = 0;
-      axis_bind_apply_timeout = 100;
+      axis_bind_apply_timeout = 0;
       focus_on_activate = 1;
       sloppyfocus = 1;
       warpcursor = 1;
@@ -424,7 +424,9 @@
 
       mousebind = [
         "SUPER,btn_left,moveresize,curmove"
-        "alt,btn_middle,set_proportion,0.5"
+        # alt,btn_middle is variant-specific:
+        #   stable: set_proportion,0.5  (scroller proportion reset)
+        #   ext:    canvas_drag_pan      (viewport panning on canvas)
         "SUPER,btn_right,moveresize,curresize"
         "SUPER+CTRL,btn_left,minimized"
         "SUPER+CTRL,btn_right,killclient"
@@ -433,8 +435,9 @@
       ];
 
       axisbind = [
-        "SUPER,UP,viewtoleft_have_client"
-        "SUPER,DOWN,viewtoright_have_client"
+        # SUPER+scroll is variant-specific:
+        #   stable: viewtoleft_have_client / viewtoright_have_client (tag nav)
+        #   ext:    canvas_zoom_resize (zoom in/out on canvas)
         "alt,UP,focusdir,left"
         "alt,DOWN,focusdir,right"
         "shift+super,UP,exchange_client,left"

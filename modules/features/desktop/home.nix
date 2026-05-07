@@ -8,6 +8,7 @@
     ./playerctl.nix
     ./dms.nix
     ./swayidle.nix
+    ./battery-notify.nix
   ];
 
   home.packages = [

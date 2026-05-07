@@ -15,6 +15,7 @@
     ../features/ghostty
     ../features/direnv
     ../features/bat
+    ../features/glances
     ../features/ssh
     ../features/sops
 
@@ -23,7 +24,11 @@
     ../features/desktop/mango/ext # Switch to mango/ext to try the extended fork
     ../features/desktop/greeter.nix
     ../features/browsers
+    ../features/lm-studio
     ../features/zed
+
+    # === Bluetooth ===
+    ../features/bluetooth
 
     # === Network features ===
     ../features/openssh

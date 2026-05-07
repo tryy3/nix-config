@@ -34,7 +34,6 @@ in
       ExecStart = ''
         ${pkgs.swayidle}/bin/swayidle -w \
           timeout 300 '${dms.package}/bin/dms ipc call lock lock' \
-          timeout 600 '${pkgs.systemd}/bin/systemctl suspend' \
           before-sleep '${dms.package}/bin/dms ipc call lock lock' \
           after-resume '${pkgs.systemd}/bin/loginctl unlock-sessions'
       '';

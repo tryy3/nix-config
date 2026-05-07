@@ -17,6 +17,17 @@
       "SUPER,u,focuslast"
     ];
 
+    # Scroller: ALT+middle click resets column proportion to 50%
+    mousebind = [
+      "alt,btn_middle,set_proportion,0.5"
+    ];
+
+    # SUPER+scroll navigates between tags with clients
+    axisbind = [
+      "SUPER,UP,viewtoleft_have_client"
+      "SUPER,DOWN,viewtoright_have_client"
+    ];
+
     # Layouts available in the cycle (SUPER+n switches to next)
     circle_layout = "tile,scroller";
 

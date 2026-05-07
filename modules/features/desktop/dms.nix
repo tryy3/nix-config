@@ -265,6 +265,9 @@ in
         dms_settings_search = {
           trigger = "?";
         };
+        dankBitwarden = {
+          trigger = "[";
+        };
       };
     };
 
@@ -277,6 +280,18 @@ in
     clipboardSettings = {
       maxHistory = 100; # def 25
     };
+  };
+
+  # Install rbw (Bitwarden CLI), wtype (used by DankBitwarden for autotyping),
+  # and wire the DankBitwarden DMS launcher plugin.
+  home.packages = with pkgs; [
+    rbw
+    wtype
+  ];
+
+  xdg.configFile."DankMaterialShell/plugins/dankBitwarden" = {
+    source = "${pkgs.dankbitwarden}/share/dankbitwarden";
+    recursive = true;
   };
 
   # The DMS Go binary spawns `qs` (quickshell), and the QML config in turn

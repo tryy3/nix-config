@@ -45,15 +45,18 @@
     # Viewport panning: ALT+middle-mouse drag to pan the canvas viewport.
     # Window move/resize already work via SUPER+left/right click (canvas-aware).
     mousebind = [
-      "ALT,btn_middle,canvas_drag_pan"
+      "CTRL,btn_middle,canvas_drag_pan"
     ];
 
-    # Scroll-wheel zoom on canvas (SUPER+scroll). These only dispatch on the
-    # canvas layout; on other layouts SUPER+scroll still does tag navigation.
+    # SUPER+scroll to zoom in/out on canvas. Replaces the stable variant's
+    # SUPER+scroll tag navigation (use SUPER+Left/Right keys for that instead).
     axisbind = [
-      "SUPER,UP,canvas_zoom_resize,1.4"
-      "SUPER,DOWN,canvas_zoom_resize,0.6"
+      "CTRL,UP,canvas_zoom_resize,1.2"
+      "CTRL,DOWN,canvas_zoom_resize,0.8"
     ];
+
+    # Disable axis timeout when scrolling
+    #axis_bind_apply_timeout = 0;
 
     canvas_tiling = 0;
     canvas_tiling_gap = 10;

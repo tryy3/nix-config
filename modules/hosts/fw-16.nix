@@ -26,6 +26,7 @@
     ../features/browsers
     ../features/lm-studio
     ../features/zed
+    ../features/obsidian
 
     # === Gaming ===
     ../features/steam
@@ -37,6 +38,7 @@
     ../features/openssh
     ../features/podman
     ../features/tailscale
+    ../features/syncthing
 
     # === Hardware + host-specific config ===
     ../../hosts/nixos/fw-16

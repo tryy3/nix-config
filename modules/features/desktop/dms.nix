@@ -299,20 +299,47 @@ in
     recursive = true;
   };
 
-  # The DMS Go binary spawns `qs` (quickshell), and the QML config in turn
-  # spawns lots of helpers (matugen, wtype, sh, grep, touch, dms itself, etc.).
-  # The user systemd manager's PATH is essentially empty (only contains
-  # systemd's own bin dir), so we must provide a full PATH for the unit.
+  # ── DMS systemd service hardening ──────────────────────────────────────────
   #
-  # We include the standard NixOS user-profile locations so anything installed
-  # via home.packages, environment.systemPackages, or the default Nix profile
-  # is reachable.
-  systemd.user.services.dms.Service.Environment = [
-    "PATH=${
-      lib.makeBinPath [
-        cfg.quickshell.package
-        cfg.package
-      ]
-    }:${config.home.profileDirectory}/bin:/etc/profiles/per-user/${config.home.username}/bin:/run/current-system/sw/bin:/run/wrappers/bin"
-  ];
+  # The upstream HM module sets PartOf=graphical-session.target and
+  # Restart=on-failure, but this is insufficient for two scenarios:
+  #
+  # 1. **Suspend/resume crash loop**: When MangoWM crashes on resume, the
+  #    Wayland socket disappears. DMS restarts immediately (no RestartSec),
+  #    can't connect to wayland-0, and quickshell crashes within seconds.
+  #    This repeats until systemd gives up, leaving DMS in a dead state.
+  #
+  # 2. **Session teardown**: PartOf only propagates explicit stops. If the
+  #    graphical session becomes inactive without being explicitly stopped,
+  #    DMS keeps running (or restarting) into a stale environment.
+  #    BindsTo ensures DMS stops when graphical-session.target goes down.
+  #
+  # Fixes applied:
+  #   - BindsTo: stop DMS when graphical-session.target becomes inactive
+  #   - RestartSec: wait 5s before restarting (gives compositor time to
+  #     recreate the Wayland socket after resume)
+  #   - ExecStartPre: block until wayland-0 socket exists, preventing
+  #     immediate crashes when the compositor hasn't finished starting
+  #   - Environment: PATH for the Go binary and its spawned helpers
+  systemd.user.services.dms = {
+    Unit = {
+      BindsTo = [ "graphical-session.target" ];
+    };
+
+    Service = {
+      RestartSec = "5";
+      ExecStartPre = [
+        "${pkgs.bash}/bin/bash -c 'while [ ! -S $$XDG_RUNTIME_DIR/wayland-0 ]; do sleep 0.5; done'"
+      ];
+      Environment = [
+        "PATH=${
+          lib.makeBinPath [
+            cfg.quickshell.package
+            cfg.package
+            pkgs.unstable.rbw
+          ]
+        }:${config.home.profileDirectory}/bin:/etc/profiles/per-user/${config.home.username}/bin:/run/current-system/sw/bin:/run/wrappers/bin"
+      ];
+    };
+  };
 }

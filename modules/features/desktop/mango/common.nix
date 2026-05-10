@@ -407,6 +407,7 @@
         # custom app binds
         "SUPER,Return,spawn,zen-twilight"
         "SUPER,d,spawn,vesktop"
+        "SUPER,e,spawn,obsidian"
         "SUPER,y,spawn,spotify-web"
         "SUPER,w,killclient,"
         "CTRL+SUPER,Return,spawn,ghostty -e yazi"
@@ -544,6 +545,7 @@
         "istagsilent:1,appid:org.telegram.desktop"
 
         "tags:4,appid:chromium"
+        "tags:4,appid:obsidian"
         "tags:3,appid:QQ"
         "tags:2,appid:mpv"
         "tags:6,appid:obs"

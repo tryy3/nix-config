@@ -58,7 +58,7 @@
         podman
         podman-compose
         gnupg
-        pinentry-tty
+        pinentry-qt
         gh
         yazi
         wl-clipboard
@@ -66,6 +66,7 @@
     }
     ++ [
       pkgs.unstable.opencode
+      pkgs.hunkdiff
     ];
 
   nix = {
@@ -84,7 +85,7 @@
   # GPG agent for pinentry
   services.gpg-agent = {
     enable = true;
-    pinentry.package = pkgs.pinentry-tty;
+    pinentry.package = pkgs.pinentry-qt;
   };
 
   # Nicely reload system units when changing configs

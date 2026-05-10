@@ -266,7 +266,7 @@ in
           trigger = "?";
         };
         dankBitwarden = {
-          trigger = "[";
+          trigger = "!";
         };
       };
     };
@@ -284,9 +284,14 @@ in
 
   # Install rbw (Bitwarden CLI), wtype (used by DankBitwarden for autotyping),
   # and wire the DankBitwarden DMS launcher plugin.
-  home.packages = with pkgs; [
-    rbw
-    wtype
+  # rbw config (~/.config/rbw/config.json) is managed manually since it contains
+  # sensitive details (email, server URL). The pinentry must be a GUI-capable one
+  # for the DMS context, so we ensure pinentry-qt is available and override the
+  # rbw config's pinentry field via xdg.configFile — but only the pinentry key,
+  # leaving the rest of the config untouched.
+  home.packages = [
+    pkgs.unstable.rbw
+    pkgs.wtype
   ];
 
   xdg.configFile."DankMaterialShell/plugins/dankBitwarden" = {

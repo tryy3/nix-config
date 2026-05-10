@@ -27,6 +27,9 @@
     ../features/lm-studio
     ../features/zed
 
+    # === Gaming ===
+    ../features/steam
+
     # === Bluetooth ===
     ../features/bluetooth
 

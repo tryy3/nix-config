@@ -97,11 +97,13 @@ in
     Unit = {
       Description = "Battery level notification monitor";
       PartOf = [ "graphical-session.target" ];
+      BindsTo = [ "graphical-session.target" ];
       After = [ "graphical-session.target" ];
     };
 
     Service = {
       ExecStart = "${batteryNotifyScript}";
+      Environment = [ "PATH=${pkgs.coreutils}/bin:${pkgs.gnugrep}/bin:${pkgs.findutils}/bin" ];
       Restart = "on-failure";
       RestartSec = 5;
     };

@@ -24,6 +24,10 @@ rebuild: rebuild-pre && rebuild-post
   # NOTE: Add --option eval-cache false if you end up caching a failure you can't get around
   scripts/rebuild.sh
 
+# Rebuild with download progress bars (two-phase: build with bar-with-logs, then activate)
+rebuild-progress: rebuild-pre && rebuild-post
+  scripts/rebuild.sh progress
+
 # Rebuild the system and run a flake check
 rebuild-full: rebuild-pre && rebuild-post
   scripts/rebuild.sh

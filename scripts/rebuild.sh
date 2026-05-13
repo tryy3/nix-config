@@ -4,6 +4,11 @@
 # This script is used to rebuild the system configuration for the current host.
 #
 # SC2086 is ignored because we purposefully pass some values as a set of arguments, so we want the splitting to happen
+#
+# Usage:
+#   ./rebuild.sh              — Standard rebuild (nh with nom UI)
+#   ./rebuild.sh progress     — Two-phase rebuild: download/build with progress bars, then activate
+#   ./rebuild.sh trace        — Standard rebuild with --show-trace
 
 function red() {
 	echo -e "\x1B[31m[!] $1 \x1B[0m"
@@ -26,8 +31,11 @@ function yellow() {
 }
 
 switch_args="--show-trace --impure --flake "
+MODE="standard"
 if [[ -n $1 && $1 == "trace" ]]; then
 	switch_args="$switch_args --show-trace "
+elif [[ -n $1 && $1 == "progress" ]]; then
+	MODE="progress"
 elif [[ -n $1 ]]; then
 	HOST=$1
 else
@@ -80,7 +88,27 @@ else
 	if command -v nh &>/dev/null; then
 		REPO_PATH=$(pwd)
 		export REPO_PATH
-		nh os switch . -- --impure --show-trace
+
+		if [ "$MODE" = "progress" ]; then
+			# ================================================================
+			# Two-phase rebuild:
+			#   Phase 1 — Build with bar-with-logs for download progress bars
+			#   Phase 2 — Activate with nh (fast, everything already in store)
+			# ================================================================
+			green "Phase 1: Building with progress bars..."
+			if ! nix build ".#nixosConfigurations.${HOST}.config.system.build.toplevel" \
+				--impure \
+				--show-trace \
+				--option log-format bar-with-logs; then
+				red "Build failed in phase 1"
+				exit 1
+			fi
+
+			green "Phase 2: Activating configuration..."
+			nh os switch . -- --impure --show-trace
+		else
+			nh os switch . -- --impure --show-trace
+		fi
 	else
 		sudo nixos-rebuild $switch_args
 	fi

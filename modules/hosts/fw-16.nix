@@ -2,7 +2,7 @@
 #
 # fw-16 host configuration.
 # Declares which features this host needs.
-{ ... }:
+{ config, lib, ... }:
 {
   imports = [
     # === Base (always needed) ===
@@ -40,11 +40,38 @@
     ../features/tailscale
     ../features/syncthing
 
+    # === AI Stack ===
+    ../features/ai-stack/hermes
+    ../features/ai-stack/proxy
+    ../features/ai-stack/memory
+
     # === Hardware + host-specific config ===
     ../../hosts/nixos/fw-16
   ];
 
   hostSpec = {
     hostName = "fw-16";
+  };
+
+  # Enable Manifest proxy
+  services.manifest-proxy.enable = true;
+
+  # Enable ByteRover memory
+  ai-stack.memory.enable = true;
+
+  # fw-16-specific Hermes config: point at local Manifest proxy
+  services.hermes-agent = {
+    settings.model = {
+      default = "manifest/auto";
+      provider = "openai";
+    };
+    environmentFiles = lib.mkIf (config.sops.secrets ? "hermes-api-key") [
+      config.sops.secrets."hermes-api-key".path
+    ];
+    environment = {
+      OPENAI_BASE_URL = "http://localhost:2099/v1";
+      GATEWAY_ALLOW_ALL_USERS = "true";
+      API_SERVER_ENABLED = "true";
+    };
   };
 }

@@ -11,7 +11,6 @@
   imports = [
     inputs.nixos-wsl.nixosModules.default
     inputs.hermes-agent.nixosModules.default
-    ./hermes.nix
   ];
 
   wsl.enable = true;

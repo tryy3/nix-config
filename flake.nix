@@ -204,6 +204,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Podman Quadlet support — declarative containers via systemd
+    # NOTE: quadlet-nix does not have a 'nixpkgs' input, so no follows needed
+    quadlet-nix.url = "github:SEIAROTg/quadlet-nix";
+
     #
     # ========= Personal Repositories =========
     #

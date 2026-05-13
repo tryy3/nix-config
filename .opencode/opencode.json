@@ -1,0 +1,17 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "provider": {
+        "hermes": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "Hermes",
+            "options": {
+                "baseURL": "http://127.0.0.1:8642/v1"
+            },
+            "models": {
+                "hermes-agent": {
+                    "name": "Hermes Agent"
+                }
+            }
+        }
+    }
+}

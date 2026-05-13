@@ -1,4 +1,10 @@
+{ inputs, ... }:
 {
+  imports = [
+    # Quadlet — declarative Podman containers via systemd unit files
+    inputs.quadlet-nix.nixosModules.quadlet
+  ];
+
   virtualisation.podman = {
     enable = true;
     # Create a `docker` alias so tools expecting the docker CLI work transparently

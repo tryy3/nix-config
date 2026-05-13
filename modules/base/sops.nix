@@ -40,6 +40,10 @@ in
         sopsFile = "${sopsFolder}/secrets.yaml";
         owner = config.users.users.${config.hostSpec.username}.name;
       };
+      "hermes-api-key" = {
+        sopsFile = "${sopsFolder}/secrets.yaml";
+        owner = config.users.users.${config.hostSpec.username}.name;
+      };
     })
   ];
 

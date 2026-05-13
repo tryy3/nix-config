@@ -317,10 +317,10 @@
     },
     "nix-secrets": {
       "locked": {
-        "lastModified": 1777903057,
-        "narHash": "sha256-+ztISV89IudBan2JJ028nD7cegKEQfTP35My+LyKns8=",
+        "lastModified": 1778694658,
+        "narHash": "sha256-AKRw8o8BU5s/uGsi5EtpUFoPKDA2yjRtTkxzExNXL+Q=",
         "ref": "simple",
-        "rev": "2d32d0031677ec1340c31411f66aa074e14e67a4",
+        "rev": "7a77df679ae5e65e8ec51a68f49549be71fbc947",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/tryy3/nix-secrets.git"
@@ -594,6 +594,21 @@
         "type": "github"
       }
     },
+    "quadlet-nix": {
+      "locked": {
+        "lastModified": 1778430078,
+        "narHash": "sha256-IKv4iqSoZaOthKfXOEYK0IPU/tvybn1GqvUtuDd0SNc=",
+        "owner": "SEIAROTg",
+        "repo": "quadlet-nix",
+        "rev": "5c325f2c9165aefb82a9da5b0352a66e0e1f5287",
+        "type": "github"
+      },
+      "original": {
+        "owner": "SEIAROTg",
+        "repo": "quadlet-nix",
+        "type": "github"
+      }
+    },
     "quickshell": {
       "inputs": {
         "nixpkgs": [
@@ -635,6 +650,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "pre-commit-hooks": "pre-commit-hooks",
+        "quadlet-nix": "quadlet-nix",
         "sops-nix": "sops-nix",
         "zen-browser": "zen-browser"
       }

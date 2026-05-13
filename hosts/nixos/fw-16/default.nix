@@ -14,6 +14,9 @@
     ./hardware-configuration.nix
 
     inputs.hardware.nixosModules.framework-16-amd-ai-300-series-nvidia
+
+    # Hermes agent upstream NixOS module (defines services.hermes-agent option)
+    inputs.hermes-agent.nixosModules.default
   ];
 
   # WiFi profile (uses sops secrets)

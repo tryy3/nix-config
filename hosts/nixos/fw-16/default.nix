@@ -19,6 +19,9 @@
     inputs.hermes-agent.nixosModules.default
   ];
 
+  # Required for running pre-compiled non-Nix binaries
+  programs.nix-ld.enable = true;
+
   # WiFi profile (uses sops secrets)
   sops.secrets."wifi/home-psk" = {
     mode = "0400";
@@ -31,28 +34,58 @@
   '';
 
   networking = {
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
 
-    networkmanager.ensureProfiles = {
-      environmentFiles = [ config.sops.templates."networkmanager.env".path ];
-      profiles.home = {
+      settings = {
         connection = {
-          id = "home";
-          type = "wifi";
-          autoconnect = true;
+          "wifi.powersave" = false;
         };
-        wifi = {
-          ssid = "Kaktus Plantan";
-          mode = "infrastructure";
+      };
+
+      ensureProfiles = {
+        environmentFiles = [ config.sops.templates."networkmanager.env".path ];
+        profiles.home = {
+          connection = {
+            id = "home";
+            type = "wifi";
+            autoconnect = true;
+          };
+          wifi = {
+            ssid = "Kaktus Plantan";
+            mode = "infrastructure";
+          };
+          wifi-security = {
+            key-mgmt = "wpa-psk";
+            psk = "$HOME_PSK";
+          };
+          ipv4.method = "auto";
+          ipv6.method = "auto";
         };
-        wifi-security = {
-          key-mgmt = "wpa-psk";
-          psk = "$HOME_PSK";
-        };
-        ipv4.method = "auto";
-        ipv6.method = "auto";
       };
     };
+
+  };
+
+  # ── Disable WiFi power saving at driver level ────────────────────────────
+  # NM's powersave=false doesn't always propagate to the driver.
+  # This runs on boot and after every resume to keep power_save off.
+  systemd.services."wifi-powersave-off" = {
+    description = "Disable WiFi power saving";
+    unitConfig.ConditionPathExists = "/sys/class/net/wlan0/power_save";
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.iproute2}/bin/iw dev wlan0 set power_save off";
+    };
+    wantedBy = [
+      "network-online.target"
+      "systemd-resume.target"
+    ];
+    after = [
+      "network-online.target"
+      "systemd-resume.service"
+    ];
   };
 
   boot.loader = {

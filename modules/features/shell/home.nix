@@ -11,6 +11,7 @@
     pkgs.fzf
     pkgs.fd
     pkgs.ripgrep
+    pkgs.alejandra
   ];
 
   programs.zoxide = {

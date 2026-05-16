@@ -41,6 +41,7 @@
     ../features/syncthing
 
     # === AI tools ===
+    ../features/defuddle
     ../features/pi
     ../features/tts
 

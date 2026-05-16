@@ -82,7 +82,23 @@ in
         "nix-command"
         "flakes"
       ];
+      # keep-generations = 15;
     };
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+  };
+
+  # === Auto-upgrade ===
+  system.autoUpgrade = {
+    enable = true;
+    flake = "${config.hostSpec.nixConfigPath}#${config.hostSpec.hostName}";
+    allowReboot = false;
+    dates = "06:00";
+    randomizedDelaySec = "2h";
   };
 
   # === Core NixOS settings (from old hosts/common/core/nixos.nix) ===
@@ -98,8 +114,6 @@ in
 
   programs.nh = {
     enable = true;
-    clean.enable = true;
-    clean.extraArgs = "--keep-since 20d --keep 20";
     flake = config.hostSpec.nixConfigPath;
   };
 

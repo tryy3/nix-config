@@ -11,10 +11,8 @@
 # extensions, skills — so those paths are intentionally not managed by Nix.
 # This lets you freely experiment with extensions and skills (pi install,
 # /reload, editing files) without rebuilds.
-{ config, ... }:
-let
+{config, ...}: let
   username = config.hostSpec.username;
-in
-{
-  home-manager.users.${username}.imports = [ ./home.nix ];
+in {
+  home-manager.users.${username}.imports = [./home.nix];
 }

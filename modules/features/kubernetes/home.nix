@@ -1,7 +1,7 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.packages = builtins.attrValues {
-    inherit (pkgs)
+    inherit
+      (pkgs)
       kubectl
       kubelogin-oidc # provides `kubectl oidc-login` plugin used by the kubeconfig
       talosctl

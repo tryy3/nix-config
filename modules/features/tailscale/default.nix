@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+{config, ...}: {
   # Auth key is read from sops; expected key path in nix-secrets/secrets.yaml:
   #
   #   tailscale:
@@ -8,7 +7,7 @@
   # The key is read only on first `tailscale up`; persistent state in
   # /var/lib/tailscale keeps the node logged in across reboots/rebuilds,
   # so a single-use (non-reusable) key is fine.
-  sops.secrets."tailscale/auth-key" = { };
+  sops.secrets."tailscale/auth-key" = {};
 
   services.tailscale = {
     enable = true;
@@ -21,5 +20,5 @@
   };
 
   # Trust the tailnet interface so peers reach local services without per-port rules.
-  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  networking.firewall.trustedInterfaces = ["tailscale0"];
 }

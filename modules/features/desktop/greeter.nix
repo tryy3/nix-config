@@ -12,8 +12,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   imports = [
     inputs.dms.nixosModules.greeter
   ];

@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+{inputs, ...}: {
   imports = [
     # Quadlet — declarative Podman containers via systemd unit files
     inputs.quadlet-nix.nixosModules.quadlet

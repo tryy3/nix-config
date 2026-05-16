@@ -11,11 +11,9 @@
   config,
   pkgs,
   ...
-}:
-let
+}: let
   username = config.hostSpec.username;
-in
-{
+in {
   # Graphics support
   hardware.graphics.enable = true;
 
@@ -50,7 +48,7 @@ in
           "monitor.alsa.rules" = [
             {
               matches = [
-                { "device.name" = "alsa_card.pci-0000_c2_00.6"; }
+                {"device.name" = "alsa_card.pci-0000_c2_00.6";}
               ];
               actions = {
                 update-props = {
@@ -70,8 +68,7 @@ in
     pkgs.bitwarden-desktop
     pkgs.seahorse
   ];
-  environment.etc."mozilla/native-messaging-hosts/com.8bit.bitwarden.json".source =
-    "${pkgs.bitwarden-desktop}/lib/mozilla/native-messaging-hosts/com.8bit.bitwarden.json";
+  environment.etc."mozilla/native-messaging-hosts/com.8bit.bitwarden.json".source = "${pkgs.bitwarden-desktop}/lib/mozilla/native-messaging-hosts/com.8bit.bitwarden.json";
   services.gnome.gnome-keyring.enable = true;
   services.gnome.gcr-ssh-agent.enable = false;
   security.pam.services.greetd.enableGnomeKeyring = true;
@@ -94,5 +91,5 @@ in
   };
 
   # HM wiring
-  home-manager.users.${username}.imports = [ ./home.nix ];
+  home-manager.users.${username}.imports = [./home.nix];
 }

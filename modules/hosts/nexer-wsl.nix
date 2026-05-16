@@ -2,8 +2,7 @@
 #
 # nexer-wsl host configuration.
 # Declares which features this host needs.
-{ ... }:
-{
+{...}: {
   imports = [
     # === Base (always needed) ===
     ../base

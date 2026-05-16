@@ -24,12 +24,10 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   cfg = config.services.manifest-proxy;
   username = config.hostSpec.username;
-in
-{
+in {
   options.services.manifest-proxy = {
     enable = lib.mkEnableOption "Manifest AI proxy (smart model router)";
     port = lib.mkOption {
@@ -73,6 +71,6 @@ in
     # NOTE: imports is a special option processed before merging, so mkIf
     # cannot be used here. The home.nix file itself checks osConfig to
     # conditionally enable quadlet containers.
-    home-manager.users.${username}.imports = [ ./home.nix ];
+    home-manager.users.${username}.imports = [./home.nix];
   };
 }

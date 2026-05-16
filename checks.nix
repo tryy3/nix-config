@@ -3,24 +3,23 @@
   system,
   pkgs,
   ...
-}:
-{
+}: {
   bats-test =
     pkgs.runCommand "bats-test"
-      {
-        src = ../.;
-        buildInputs = builtins.attrValues { inherit (pkgs) bats yq-go inetutils; };
-      }
-      ''
+    {
+      src = ../.;
+      buildInputs = builtins.attrValues {inherit (pkgs) bats yq-go inetutils;};
+    }
+    ''
 
-        cd $src
-        bats tests
-        touch $out
-      '';
+      cd $src
+      bats tests
+      touch $out
+    '';
 
   pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
     src = ./.;
-    default_stages = [ "pre-commit" ];
+    default_stages = ["pre-commit"];
     hooks = {
       # ========== General ==========
       check-added-large-files = {
@@ -45,8 +44,8 @@
         description = "forbids any new submodules in the repository";
         language = "fail";
         entry = "submodules are not allowed in this repository:";
-        types = [ "directory" ];
-        excludes = [ "^\.agents/skills/nixos$" ];
+        types = ["directory"];
+        excludes = ["^\.agents/skills/nixos$"];
       };
 
       destroyed-symlinks = {
@@ -55,11 +54,14 @@
         description = "detects symlinks which are changed to regular files with a content of a path which that symlink was pointing to.";
         package = inputs.pre-commit-hooks.checks.${system}.pre-commit-hooks;
         entry = "${inputs.pre-commit-hooks.checks.${system}.pre-commit-hooks}/bin/destroyed-symlinks";
-        types = [ "symlink" ];
+        types = ["symlink"];
       };
 
       # ========== nix ==========
-      nixfmt-rfc-style.enable = true;
+      alejandra = {
+        enable = true;
+        settings.verbosity = "quiet";
+      };
       deadnix = {
         enable = true;
         settings = {

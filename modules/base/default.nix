@@ -10,12 +10,10 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   platform = "nixos";
   platformModules = "${platform}Modules";
-in
-{
+in {
   imports = [
     inputs.home-manager.${platformModules}.home-manager
     inputs.sops-nix.${platformModules}.sops
@@ -41,7 +39,8 @@ in
   hostSpec = {
     username = "tryy3";
     handle = "tryy3";
-    inherit (inputs.nix-secrets)
+    inherit
+      (inputs.nix-secrets)
       domain
       email
       userFullName
@@ -60,13 +59,13 @@ in
 
   # === Overlays ===
   nixpkgs = {
-    overlays = [ outputs.overlays.default ];
+    overlays = [outputs.overlays.default];
     config.allowUnfree = true;
   };
 
   # === Nix settings ===
   nix = {
-    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+    registry = lib.mapAttrs (_: value: {flake = value;}) inputs;
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     settings = {
@@ -74,7 +73,7 @@ in
       log-lines = 25;
       min-free = 128000000; # 128MB
       max-free = 1000000000; # 1GB
-      trusted-users = [ "@wheel" ];
+      trusted-users = ["@wheel"];
       auto-optimise-store = true;
       warn-dirty = false;
       allow-import-from-derivation = false;

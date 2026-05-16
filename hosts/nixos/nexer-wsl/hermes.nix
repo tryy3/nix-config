@@ -1,10 +1,9 @@
-{ config, ... }:
-{
-  users.users.${config.hostSpec.username}.extraGroups = [ "hermes" ];
+{config, ...}: {
+  users.users.${config.hostSpec.username}.extraGroups = ["hermes"];
 
   services.hermes-agent = {
     enable = true;
-    environmentFiles = [ config.sops.secrets."hermes-env".path ];
+    environmentFiles = [config.sops.secrets."hermes-env".path];
     environment = {
       GATEWAY_ALLOW_ALL_USERS = "true";
     };
@@ -14,7 +13,7 @@
         default = "claude-sonnet-4.6";
         provider = "copilot";
       };
-      toolsets = [ "all" ];
+      toolsets = ["all"];
 
       discord = {
         free_response_channels = "1493224843347234857";

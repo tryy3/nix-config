@@ -7,18 +7,16 @@
   inputs,
   config,
   ...
-}:
-let
+}: let
   sopsFolder = builtins.toString inputs.nix-secrets;
   secretsFile = "${sopsFolder}/secrets.yaml";
-in
-{
+in {
   sops = {
     defaultSopsFile = "${secretsFile}";
     validateSopsFiles = false;
     age = {
       # Automatically import host SSH keys as age keys
-      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      sshKeyPaths = ["/etc/ssh/ssh_host_ed25519_key"];
     };
   };
 
@@ -48,14 +46,12 @@ in
   ];
 
   # Fix ownership of .config/sops/age directory
-  system.activationScripts.sopsSetAgeKeyOwnership =
-    let
-      ageFolder = "${config.hostSpec.home}/.config/sops/age";
-      user = config.users.users.${config.hostSpec.username}.name;
-      group = config.users.users.${config.hostSpec.username}.group;
-    in
-    ''
-      mkdir -p ${ageFolder} || true
-      chown -R ${user}:${group} ${config.hostSpec.home}/.config
-    '';
+  system.activationScripts.sopsSetAgeKeyOwnership = let
+    ageFolder = "${config.hostSpec.home}/.config/sops/age";
+    user = config.users.users.${config.hostSpec.username}.name;
+    group = config.users.users.${config.hostSpec.username}.group;
+  in ''
+    mkdir -p ${ageFolder} || true
+    chown -R ${user}:${group} ${config.hostSpec.home}/.config
+  '';
 }

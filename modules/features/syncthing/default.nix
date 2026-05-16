@@ -11,15 +11,10 @@
 #   22000/tcp + 22000/udp — sync protocol (TCP + QUIC)
 #   21027/udp             — local discovery
 #   8384/tcp              — web GUI
-{
-  config,
-  ...
-}:
-let
+{config, ...}: let
   username = config.hostSpec.username;
   homeDir = config.hostSpec.home;
-in
-{
+in {
   services.syncthing = {
     enable = true;
     user = username;

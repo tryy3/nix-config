@@ -3,7 +3,6 @@
   stdenv,
   fetchFromGitHub,
 }:
-
 stdenv.mkDerivation rec {
   pname = "dankbitwarden";
   version = "3d70eb342750fe64f2baa8f69102992f2a644d98";
@@ -24,6 +23,6 @@ stdenv.mkDerivation rec {
     description = "Bitwarden launcher plugin for DankMaterialShell using rbw";
     homepage = "https://github.com/tryy3/DankBitwarden";
     license = lib.licenses.mit;
-    maintainers = [ lib.maintainers.tryy3 ];
+    maintainers = [lib.maintainers.tryy3];
   };
 }

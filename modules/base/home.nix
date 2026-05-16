@@ -8,8 +8,7 @@
   pkgs,
   hostSpec,
   ...
-}:
-{
+}: {
   services.ssh-agent.enable = true;
 
   home = {
@@ -30,7 +29,8 @@
   # Core CLI packages that don't have their own feature module
   home.packages =
     builtins.attrValues {
-      inherit (pkgs)
+      inherit
+        (pkgs)
         curl
         pciutils
         pfetch

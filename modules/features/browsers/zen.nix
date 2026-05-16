@@ -1,6 +1,5 @@
-{ inputs, ... }:
-{
-  imports = [ inputs.zen-browser.homeModules.twilight-official ];
+{inputs, ...}: {
+  imports = [inputs.zen-browser.homeModules.twilight-official];
 
   programs.zen-browser = {
     enable = true;
@@ -269,17 +268,17 @@
               {
                 name = "Reddit";
                 url = "https://www.reddit.com";
-                tags = [ "social" ];
+                tags = ["social"];
               }
               {
                 name = "GitHub";
                 url = "https://github.com";
-                tags = [ "dev" ];
+                tags = ["dev"];
               }
               {
                 name = "Proton Mail";
                 url = "https://mail.proton.me";
-                tags = [ "mail" ];
+                tags = ["mail"];
               }
             ];
           }
@@ -351,7 +350,7 @@
         engines = {
           "ddg" = {
             name = "DuckDuckGo";
-            urls = [ { template = "https://duckduckgo.com/?q={searchTerms}"; } ];
+            urls = [{template = "https://duckduckgo.com/?q={searchTerms}";}];
             icon = "https://duckduckgo.com/favicon.ico";
             definedAliases = [
               "@ddg"

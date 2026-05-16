@@ -5,9 +5,7 @@
 #
 # Integrates with your notification daemon (DMS implements the freedesktop spec,
 # so notify-send works out of the box).
-{ pkgs, ... }:
-
-let
+{pkgs, ...}: let
   batteryNotifyScript = pkgs.writeShellScript "battery-notify" ''
     #!/usr/bin/env bash
     set -euo pipefail
@@ -89,27 +87,26 @@ let
       sleep "$INTERVAL"
     done
   '';
-in
-{
-  home.packages = [ pkgs.libnotify ];
+in {
+  home.packages = [pkgs.libnotify];
 
   systemd.user.services.battery-notify = {
     Unit = {
       Description = "Battery level notification monitor";
-      PartOf = [ "graphical-session.target" ];
-      BindsTo = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
+      PartOf = ["graphical-session.target"];
+      BindsTo = ["graphical-session.target"];
+      After = ["graphical-session.target"];
     };
 
     Service = {
       ExecStart = "${batteryNotifyScript}";
-      Environment = [ "PATH=${pkgs.coreutils}/bin:${pkgs.gnugrep}/bin:${pkgs.findutils}/bin" ];
+      Environment = ["PATH=${pkgs.coreutils}/bin:${pkgs.gnugrep}/bin:${pkgs.findutils}/bin"];
       Restart = "on-failure";
       RestartSec = 5;
     };
 
     Install = {
-      WantedBy = [ "graphical-session.target" ];
+      WantedBy = ["graphical-session.target"];
     };
   };
 }

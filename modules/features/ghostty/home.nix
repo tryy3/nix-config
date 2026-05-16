@@ -2,8 +2,7 @@
   config,
   lib,
   ...
-}:
-{
+}: {
   programs.ghostty = {
     enable = true;
     # Use DMS matugen-generated theme

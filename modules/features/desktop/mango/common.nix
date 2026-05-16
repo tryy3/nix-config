@@ -15,18 +15,22 @@
 # `~/.config/mango/config.conf` from `settings`, so we inline everything here.
 # Repeating keys (`bind`, `windowrule`, `env`, etc.) are expressed as Nix lists,
 # which the module emits as duplicate `key=value` lines.
-{ pkgs, config, ... }:
 {
+  pkgs,
+  config,
+  ...
+}: {
   # Screenshot tools: grim (capture) + slurp (region select) + satty (annotate)
   # satty uses unstable to get floating-hack support (requires >= 0.20.1)
   home.packages =
     builtins.attrValues {
-      inherit (pkgs)
+      inherit
+        (pkgs)
         grim
         slurp
         ;
     }
-    ++ [ pkgs.unstable.satty ];
+    ++ [pkgs.unstable.satty];
 
   # Satty configuration:
   # - Escape = copy to clipboard + exit (the "just grab it" flow)

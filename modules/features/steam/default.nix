@@ -5,11 +5,9 @@
 # Enables programs.steam (which installs the client and sets up the
 # FHS environment) and hardware.graphics.enable32Bit so that 32-bit
 # games can use the GPU drivers.
-{ config, ... }:
-let
+{config, ...}: let
   username = config.hostSpec.username;
-in
-{
+in {
   # Steam client + FHS compatibility wrapper
   programs.steam = {
     enable = true;
@@ -22,5 +20,5 @@ in
   hardware.graphics.enable32Bit = true;
 
   # HM wiring
-  home-manager.users.${username}.imports = [ ./home.nix ];
+  home-manager.users.${username}.imports = [./home.nix];
 }

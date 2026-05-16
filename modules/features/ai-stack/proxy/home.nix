@@ -21,8 +21,7 @@
   inputs,
   lib,
   ...
-}:
-let
+}: let
   cfg =
     osConfig.services.manifest-proxy or {
       enable = false;
@@ -30,25 +29,22 @@ let
     };
   enabled = cfg.enable;
   port = toString cfg.port;
-in
-{
+in {
   # Always import quadlet-nix HM module — it only defines options, nothing is
   # enabled unless virtualisation.quadlet containers/networks are defined.
   imports = [
     inputs.quadlet-nix.homeManagerModules.quadlet
   ];
 
-  virtualisation.quadlet =
-    let
-      # PostgreSQL connection string — uses quadlet network DNS
-      # (containers on the same network resolve each other by container name)
-      databaseUrl = "postgresql://manifest:manifest@manifest-postgres:5432/manifest";
-    in
+  virtualisation.quadlet = let
+    # PostgreSQL connection string — uses quadlet network DNS
+    # (containers on the same network resolve each other by container name)
+    databaseUrl = "postgresql://manifest:manifest@manifest-postgres:5432/manifest";
+  in
     lib.mkIf enabled (
       let
         inherit (config.virtualisation.quadlet) containers networks volumes;
-      in
-      {
+      in {
         # ── Network ───────────────────────────────────────────────────────
         networks.manifest-net = {
           networkConfig = {
@@ -58,7 +54,7 @@ in
         };
 
         # ── Volume ────────────────────────────────────────────────────────
-        volumes.manifest-pgdata = { };
+        volumes.manifest-pgdata = {};
 
         # ── PostgreSQL ─────────────────────────────────────────────────────
         containers.manifest-postgres = {
@@ -74,7 +70,7 @@ in
             volumes = [
               "${volumes.manifest-pgdata.ref}:/var/lib/postgresql/data"
             ];
-            networks = [ networks.manifest-net.ref ];
+            networks = [networks.manifest-net.ref];
             healthCmd = "pg_isready -U manifest";
             healthInterval = "5s";
             healthTimeout = "3s";
@@ -96,7 +92,7 @@ in
 
           containerConfig = {
             image = "docker.io/manifestdotbuild/manifest:latest";
-            publishPorts = [ "127.0.0.1:${port}:${port}" ];
+            publishPorts = ["127.0.0.1:${port}:${port}"];
             environments = {
               DATABASE_URL = databaseUrl;
               PORT = port;
@@ -110,7 +106,7 @@ in
             environmentFiles = [
               osConfig.sops.templates."manifest-env".path
             ];
-            networks = [ networks.manifest-net.ref ];
+            networks = [networks.manifest-net.ref];
             # Health check — simple HTTP probe
             healthCmd = "node -e \"fetch('http://127.0.0.1:${port}/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\"";
             healthInterval = "30s";
@@ -118,10 +114,10 @@ in
             healthStartPeriod = "90s";
             healthRetries = 3;
             # Security hardening
-            dropCapabilities = [ "ALL" ];
+            dropCapabilities = ["ALL"];
             noNewPrivileges = true;
             readOnly = true;
-            tmpfses = [ "/tmp:size=64m" ];
+            tmpfses = ["/tmp:size=64m"];
             # Resource limits
             memory = "1g";
             pidsLimit = 512;
@@ -135,8 +131,8 @@ in
 
           # Manifest depends on PostgreSQL being healthy
           unitConfig = {
-            Requires = [ containers.manifest-postgres.ref ];
-            After = [ containers.manifest-postgres.ref ];
+            Requires = [containers.manifest-postgres.ref];
+            After = [containers.manifest-postgres.ref];
           };
 
           serviceConfig = {

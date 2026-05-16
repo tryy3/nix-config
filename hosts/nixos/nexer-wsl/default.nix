@@ -6,8 +6,7 @@
   inputs,
   lib,
   ...
-}:
-{
+}: {
   imports = [
     inputs.nixos-wsl.nixosModules.default
     inputs.hermes-agent.nixosModules.default

@@ -3,8 +3,7 @@
 # Home Manager configuration for the stable (upstream) MangoWC compositor.
 # Imports the upstream HM module, the shared mango config, and adds binds
 # that differ from the ext variant.
-{ inputs, ... }:
-{
+{inputs, ...}: {
   imports = [
     inputs.mango.hmModules.mango
     ../common.nix

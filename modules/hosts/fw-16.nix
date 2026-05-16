@@ -2,8 +2,11 @@
 #
 # fw-16 host configuration.
 # Declares which features this host needs.
-{ config, lib, ... }:
 {
+  config,
+  lib,
+  ...
+}: {
   imports = [
     # === Base (always needed) ===
     ../base

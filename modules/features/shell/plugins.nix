@@ -1,5 +1,4 @@
-{ pkgs }:
-[
+{pkgs}: [
   {
     name = "zhooks";
     src = "${pkgs.zsh-zhooks}/share/zsh/zhooks";

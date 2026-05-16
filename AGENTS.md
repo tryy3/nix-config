@@ -27,7 +27,7 @@ All commands assume you're in the repo root with `direnv allow` already run.
 | `just check` | Run `nix flake check --impure --keep-going --show-trace` on both main config and nixos-installer |
 | `just update` | Update `flake.lock` without rebuilding |
 | `just diff` | `git diff` excluding `flake.lock` |
-| `nix fmt` | Auto-format all `.nix` files in-place with nixfmt-rfc-style |
+| `nix fmt` | Auto-format all `.nix` files in-place with alejandra |
 | `just update-nix-secrets` | Fetch/rebase `../nix-secrets` and update its flake input |
 
 Tests run via `nix flake check` (bats tests in `tests/`).
@@ -520,12 +520,12 @@ in
 
 - **Use `./tmp/` for temporary files**, not `/tmp/`. A local `tmp/` directory is already gitignored. Writing outside the repo may trigger pre-commit hook failures or filesystem warnings.
 
-### nix fmt / nixfmt Pitfalls
+### nix fmt / alejandra Pitfalls
 
-- **nixfmt has NO in-place flag.** It always writes to stdout. `nix fmt` (the Nix command) handles in-place formatting by piping each file through the formatter.
-- **NEVER run `nixfmt file.nix > file.nix`** — the shell truncates the file before nixfmt reads it, resulting in a 0-byte file and data loss. Safe manual format chain: `nixfmt file.nix > /tmp/fmt.nix && mv /tmp/fmt.nix file.nix`
-- If `nix fmt` fails with a cryptic `<stdin>:1:1: unexpected end of input` error, it means ONE of your `.nix` files has a parse error (or is empty). Run `nixfmt --check <file>` on recently modified files to find the culprit.
-- Use `nixfmt --check file.nix` to verify formatting without modifying (exit 1 = needs formatting, exit 0 = clean).
+- **alejandra defaults to in-place editing.** Running `alejandra .` formats all files directly. Use `alejandra --check .` to check formatting without modifying.
+- **NEVER run `alejandra file.nix > file.nix`** — the shell truncates the file before alejandra reads it, resulting in a 0-byte file and data loss. Safe manual format chain: `alejandra file.nix > /tmp/fmt.nix && mv /tmp/fmt.nix file.nix`
+- If `nix fmt` fails with a cryptic `<stdin>:1:1: unexpected end of input` error, it means ONE of your `.nix` files has a parse error (or is empty). Run `alejandra --check <file>` on recently modified files to find the culprit.
+- Use `alejandra --check file.nix` to verify formatting without modifying (exit 2 = needs formatting, exit 0 = clean).
 
 ### just check Known Issue
 

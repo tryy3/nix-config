@@ -16,17 +16,15 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   username = config.hostSpec.username;
-in
-{
+in {
   options.ai-stack.memory = {
     enable = lib.mkEnableOption "ByteRover persistent AI memory (brv CLI)";
   };
 
   config = lib.mkIf config.ai-stack.memory.enable {
     # Wire Home Manager config
-    home-manager.users.${username}.imports = [ ./home.nix ];
+    home-manager.users.${username}.imports = [./home.nix];
   };
 }

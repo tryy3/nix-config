@@ -8,8 +8,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   imports = [
     ./hardware-configuration.nix
 
@@ -44,7 +43,7 @@
       };
 
       ensureProfiles = {
-        environmentFiles = [ config.sops.templates."networkmanager.env".path ];
+        environmentFiles = [config.sops.templates."networkmanager.env".path];
         profiles.home = {
           connection = {
             id = "home";
@@ -64,7 +63,6 @@
         };
       };
     };
-
   };
 
   # ── Disable WiFi power saving at driver level ────────────────────────────
@@ -98,7 +96,7 @@
   };
 
   boot.initrd.systemd.enable = true;
-  boot.kernelParams = [ "amdgpu.abmlevel=0" ];
+  boot.kernelParams = ["amdgpu.abmlevel=0"];
   boot.kernelPackages = pkgs.linuxPackages_7_0;
 
   # Swedish keyboard (TTY only; Wayland keyboard is configured in the compositor)

@@ -17,16 +17,20 @@
 # Pi extensions can declare npm dependencies. When Pi installs or updates
 # an extension directory that has a package.json, it runs npm install there.
 # Having nodejs on PATH ensures this works without errors.
-{ pkgs, config, ... }:
 {
+  pkgs,
+  config,
+  ...
+}: {
   home.packages = builtins.attrValues {
-    inherit (pkgs)
+    inherit
+      (pkgs)
       pi-coding-agent
       nodejs
       ;
   };
 
-  home.sessionPath = [ "$HOME/.npm-global/bin" ];
+  home.sessionPath = ["$HOME/.npm-global/bin"];
 
   # ── npm global prefix ──────────────────────────────────────────────────
   # npm's default prefix on NixOS points to the read-only Nix store, which

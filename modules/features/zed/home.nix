@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # Zed editor — pulled from nixpkgs-unstable so we stay close to upstream releases.
   # The `pkgs.unstable` attribute is provided by the unstable-packages overlay
   # in overlays/default.nix.
@@ -22,7 +21,8 @@
   # enabled in home/tryy3/common/core/direnv.nix, and the "direnv" Zed
   # extension below makes Zed pick up tools from the project's dev shell.
   home.packages = builtins.attrValues {
-    inherit (pkgs)
+    inherit
+      (pkgs)
       nil
       ;
   };

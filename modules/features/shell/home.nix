@@ -4,8 +4,7 @@
   lib,
   osConfig,
   ...
-}:
-{
+}: {
   home.packages = [
     pkgs.rmtrash
     pkgs.fzf
@@ -80,7 +79,7 @@
       extended = true;
     };
 
-    plugins = import ./plugins.nix { inherit pkgs; };
+    plugins = import ./plugins.nix {inherit pkgs;};
 
     initContent = lib.mkAfter (lib.readFile ./zshrc);
     oh-my-zsh = {
@@ -98,6 +97,6 @@
       '';
     };
 
-    shellAliases = import ./aliases.nix { inherit osConfig; };
+    shellAliases = import ./aliases.nix {inherit osConfig;};
   };
 }

@@ -7,8 +7,7 @@
 # Keybind overrides from stable:
 #   SUPER+o  → toggleminimap  (was: toggleoverlay)
 #   SUPER+u  → canvas_fill_viewport  (was: focuslast)
-{ inputs, ... }:
-{
+{inputs, ...}: {
   imports = [
     inputs.mango-ext.hmModules.mango-ext
     ../common.nix

@@ -1,8 +1,7 @@
 # modules/features/desktop/home.nix
 #
 # Home Manager desktop configuration.
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   imports = [
     ./gtk.nix
     ./playerctl.nix

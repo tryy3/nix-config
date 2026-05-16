@@ -2,8 +2,7 @@
 #
 # Home Manager TTS configuration.
 # Downloads Kokoro and Matcha-TTS models and provides the `tts` command.
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   kokoroModel = pkgs.fetchzip {
     url = "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-en-v0_19.tar.bz2";
     sha256 = "sha256-Kjq29Rtn34qzkR06zG0JHR3P/eQdDUC6NPKn/WKqJs4=";
@@ -28,8 +27,7 @@ let
     ''
     + builtins.readFile ./tts.sh
   );
-in
-{
+in {
   home.packages = [
     tts
     pkgs.pandoc

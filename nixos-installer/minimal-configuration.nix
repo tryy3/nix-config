@@ -4,8 +4,7 @@
   lib,
   pkgs,
   ...
-}:
-{
+}: {
   imports = lib.flatten [
     (map lib.custom.relativeToRoot [
       "modules/common/host-spec.nix"
@@ -23,7 +22,7 @@
     username = "hiro";
   };
 
-  fileSystems."/boot".options = [ "umask=0077" ]; # Removes permissions and security warnings.
+  fileSystems."/boot".options = ["umask=0077"]; # Removes permissions and security warnings.
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot = {
     enable = true;
@@ -45,7 +44,8 @@
   ];
 
   environment.systemPackages = builtins.attrValues {
-    inherit (pkgs)
+    inherit
+      (pkgs)
       wget
       curl
       rsync
@@ -61,15 +61,15 @@
     qemuGuest.enable = true;
     openssh = {
       enable = true;
-      ports = [ 22 ];
+      ports = [22];
       settings.PermitRootLogin = "yes";
-      authorizedKeysFiles = lib.mkForce [ "/etc/ssh/authorized_keys.d/%u" ];
+      authorizedKeysFiles = lib.mkForce ["/etc/ssh/authorized_keys.d/%u"];
     };
   };
 
   nix = {
     # registry and nixPath shouldn't be required here because flakes but removal results in warning spam on build
-    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+    registry = lib.mapAttrs (_: value: {flake = value;}) inputs;
     nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
 
     settings = {

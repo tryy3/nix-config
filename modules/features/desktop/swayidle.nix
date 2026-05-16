@@ -2,12 +2,14 @@
 #
 # Idle management: auto-lock, auto-suspend, lock-before-sleep.
 # Respects systemd inhibitor locks (e.g., video playback in Firefox/mpv).
-{ config, pkgs, ... }:
-let
-  dms = config.programs.dank-material-shell;
-in
 {
-  home.packages = [ pkgs.swayidle ];
+  config,
+  pkgs,
+  ...
+}: let
+  dms = config.programs.dank-material-shell;
+in {
+  home.packages = [pkgs.swayidle];
 
   # swayidle user service — starts automatically with the Wayland session.
   #
@@ -33,9 +35,9 @@ in
   systemd.user.services.swayidle = {
     Unit = {
       Description = "Idle management daemon (auto-lock + auto-suspend)";
-      PartOf = [ "graphical-session.target" ];
-      BindsTo = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
+      PartOf = ["graphical-session.target"];
+      BindsTo = ["graphical-session.target"];
+      After = ["graphical-session.target"];
     };
 
     Service = {
@@ -49,7 +51,7 @@ in
     };
 
     Install = {
-      WantedBy = [ "graphical-session.target" ];
+      WantedBy = ["graphical-session.target"];
     };
   };
 }

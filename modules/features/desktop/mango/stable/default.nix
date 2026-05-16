@@ -9,14 +9,12 @@
   config,
   inputs,
   ...
-}:
-let
+}: let
   username = config.hostSpec.username;
-in
-{
-  imports = [ inputs.mango.nixosModules.mango ];
+in {
+  imports = [inputs.mango.nixosModules.mango];
 
   programs.mango.enable = true;
 
-  home-manager.users.${username}.imports = [ ./home.nix ];
+  home-manager.users.${username}.imports = [./home.nix];
 }

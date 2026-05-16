@@ -1,9 +1,7 @@
-{ ... }:
-let
+{...}: let
   devDirectory = "$HOME/src";
   devNix = "${devDirectory}/nix";
-in
-{
+in {
   whichreal = ''function _whichreal(){ (alias "$1" >/dev/null 2>&1 && (alias "$1" | sed "s/.*=.\(.*\).../\1/" | xargs which)) || which "$1"; }; _whichreal'';
 
   #-------------Bat related------------

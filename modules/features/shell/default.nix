@@ -2,15 +2,10 @@
 #
 # Shell feature: zsh + starship + fzf + zoxide + bash.
 # Enables zsh system-wide and wires the Home Manager shell config.
-{
-  config,
-  ...
-}:
-let
+{config, ...}: let
   username = config.hostSpec.username;
-in
-{
+in {
   programs.zsh.enable = true;
 
-  home-manager.users.${username}.imports = [ ./home.nix ];
+  home-manager.users.${username}.imports = [./home.nix];
 }

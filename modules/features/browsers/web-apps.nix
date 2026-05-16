@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-let
+{pkgs, ...}: let
   spotifyWeb = pkgs.writeShellScriptBin "spotify-web" ''
     set -euo pipefail
     DATA_DIR="''${XDG_DATA_HOME:-$HOME/.local/share}/web-apps/spotify"
@@ -13,8 +12,7 @@ let
       --ozone-platform=wayland \
       "$@"
   '';
-in
-{
+in {
   home.packages = [
     pkgs.brave
     spotifyWeb

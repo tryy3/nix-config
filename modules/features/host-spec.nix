@@ -4,8 +4,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   options.hostSpec = lib.mkOption {
     type = lib.types.submodule {
       freeformType = with lib.types; attrsOf str;
@@ -24,12 +23,12 @@
           description = "The email of the user";
         };
         work = lib.mkOption {
-          default = { };
+          default = {};
           type = lib.types.attrsOf lib.types.anything;
           description = "An attribute set of work-related information if isWork is true";
         };
         networking = lib.mkOption {
-          default = { };
+          default = {};
           type = lib.types.attrsOf lib.types.anything;
           description = "An attribute set of networking information";
         };
@@ -53,20 +52,19 @@
         home = lib.mkOption {
           type = lib.types.str;
           description = "The home directory of the user";
-          default =
-            let
-              user = config.hostSpec.username;
-            in
-            if pkgs.stdenv.isLinux then "/home/${user}" else "/Users/${user}";
+          default = let
+            user = config.hostSpec.username;
+          in
+            if pkgs.stdenv.isLinux
+            then "/home/${user}"
+            else "/Users/${user}";
         };
         nixConfigPath = lib.mkOption {
           type = lib.types.str;
           description = "The path to the nix-config flake directory (used by nh and FLAKE env var)";
-          default =
-            let
-              home = config.hostSpec.home;
-            in
-            "${home}/src/nix/nix-config";
+          default = let
+            home = config.hostSpec.home;
+          in "${home}/src/nix/nix-config";
         };
         persistFolder = lib.mkOption {
           type = lib.types.str;
@@ -151,22 +149,20 @@
   };
 
   config = {
-    assertions =
-      let
-        # We import these options to HM and NixOS, so need to not fail on HM
-        isImpermanent =
-          config ? "system" && config.system ? "impermanence" && config.system.impermanence.enable;
-      in
-      [
-        {
-          assertion =
-            !config.hostSpec.isWork || (config.hostSpec.isWork && !builtins.isNull config.hostSpec.work);
-          message = "isWork is true but no work attribute set is provided";
-        }
-        {
-          assertion = !isImpermanent || (isImpermanent && !("${config.hostSpec.persistFolder}" == ""));
-          message = "config.system.impermanence.enable is true but no persistFolder path is provided";
-        }
-      ];
+    assertions = let
+      # We import these options to HM and NixOS, so need to not fail on HM
+      isImpermanent =
+        config ? "system" && config.system ? "impermanence" && config.system.impermanence.enable;
+    in [
+      {
+        assertion =
+          !config.hostSpec.isWork || (config.hostSpec.isWork && !builtins.isNull config.hostSpec.work);
+        message = "isWork is true but no work attribute set is provided";
+      }
+      {
+        assertion = !isImpermanent || (isImpermanent && !("${config.hostSpec.persistFolder}" == ""));
+        message = "config.system.impermanence.enable is true but no persistFolder path is provided";
+      }
+    ];
   };
 }

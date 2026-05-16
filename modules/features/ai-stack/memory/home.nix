@@ -15,13 +15,11 @@
   pkgs,
   lib,
   ...
-}:
-let
+}: let
   hasProxy = osConfig.services ? "manifest-proxy" && osConfig.services.manifest-proxy.enable;
-in
-{
+in {
   # ── Package ────────────────────────────────────────────────────────────
-  home.packages = [ pkgs.byterover-cli ];
+  home.packages = [pkgs.byterover-cli];
 
   # ── Shell aliases ──────────────────────────────────────────────────────
   programs.zsh.shellAliases = {

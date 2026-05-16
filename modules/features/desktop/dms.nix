@@ -9,11 +9,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.programs.dank-material-shell;
-in
-{
+in {
   imports = [
     inputs.dms.homeModules.dank-material-shell
   ];
@@ -91,7 +89,7 @@ in
       matugenTemplateEmacs = false;
 
       # --- App ID substitutions (cleared; upstream default has 5 entries) ---
-      appIdSubstitutions = [ ];
+      appIdSubstitutions = [];
 
       # --- Desktop widget instances ---
       desktopWidgetInstances = [
@@ -120,7 +118,7 @@ in
             topProcessSortBy = "cpu";
             layoutMode = "auto";
             graphInterval = 60;
-            displayPreferences = [ "all" ];
+            displayPreferences = ["all"];
             showOnOverlay = false;
           };
           # NOTE: positions contain per-monitor pixel coordinates and will
@@ -147,7 +145,7 @@ in
             showDate = true;
             showAnalogNumbers = false;
             showAnalogSeconds = true;
-            displayPreferences = [ "all" ];
+            displayPreferences = ["all"];
             showOnOverlay = false;
             clickThrough = false;
           };
@@ -188,7 +186,7 @@ in
           name = "Main Bar";
           enabled = true;
           position = 0;
-          screenPreferences = [ "all" ];
+          screenPreferences = ["all"];
           showOnLastDisplay = true;
           leftWidgets = [
             "launcherButton"
@@ -342,7 +340,7 @@ in
   #   - Environment: PATH for the Go binary and its spawned helpers
   systemd.user.services.dms = {
     Unit = {
-      BindsTo = [ "graphical-session.target" ];
+      BindsTo = ["graphical-session.target"];
     };
 
     Service = {

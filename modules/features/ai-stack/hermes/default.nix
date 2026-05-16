@@ -9,16 +9,14 @@
   config,
   lib,
   ...
-}:
-let
+}: let
   hostSpec = config.hostSpec;
   username = hostSpec.username;
-in
-{
+in {
   # Wire Home Manager config
-  home-manager.users.${username}.imports = [ ./home.nix ];
+  home-manager.users.${username}.imports = [./home.nix];
 
-  users.users.${username}.extraGroups = [ "hermes" ];
+  users.users.${username}.extraGroups = ["hermes"];
 
   services.hermes-agent = {
     enable = true;
@@ -28,7 +26,7 @@ in
     addToSystemPackages = true;
 
     settings = {
-      toolsets = [ "all" ];
+      toolsets = ["all"];
 
       memory = {
         enabled = true;

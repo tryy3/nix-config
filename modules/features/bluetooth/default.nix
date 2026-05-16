@@ -1,11 +1,9 @@
 # modules/features/bluetooth/default.nix
 #
 # Bluetooth feature: bluez daemon + user-level management tools.
-{ config, ... }:
-let
+{config, ...}: let
   username = config.hostSpec.username;
-in
-{
+in {
   # Enable Bluetooth daemon (bluez)
   hardware.bluetooth = {
     enable = true;
@@ -13,5 +11,5 @@ in
   };
 
   # Wire Home Manager config
-  home-manager.users.${username}.imports = [ ./home.nix ];
+  home-manager.users.${username}.imports = [./home.nix];
 }

@@ -5,7 +5,6 @@
   makeWrapper,
   nodejs,
 }:
-
 # Strategy: Pi is published as a pre-built npm package with compiled dist/.
 # We avoid building from the monorepo source (workspace resolution, tsgo
 # compilation chain) by fetching the npm registry tarball instead.
@@ -24,65 +23,65 @@
 let
   version = "0.74.0";
 in
-buildNpmPackage rec {
-  pname = "pi-coding-agent";
-  inherit version;
+  buildNpmPackage rec {
+    pname = "pi-coding-agent";
+    inherit version;
 
-  nativeBuildInputs = [
-    makeWrapper
-    nodejs
-  ];
+    nativeBuildInputs = [
+      makeWrapper
+      nodejs
+    ];
 
-  # Pre-built npm package — contains dist/, package.json, docs, examples.
-  # No TypeScript compilation needed.
-  src = fetchurl {
-    url = "https://registry.npmjs.org/@earendil-works/pi-coding-agent/-/pi-coding-agent-${version}.tgz";
-    hash = "sha256-l0pzuWGVvX1jDhFYaey14N16XDo47kkm3JlEhmPUo0Q=";
-  };
+    # Pre-built npm package — contains dist/, package.json, docs, examples.
+    # No TypeScript compilation needed.
+    src = fetchurl {
+      url = "https://registry.npmjs.org/@earendil-works/pi-coding-agent/-/pi-coding-agent-${version}.tgz";
+      hash = "sha256-l0pzuWGVvX1jDhFYaey14N16XDo47kkm3JlEhmPUo0Q=";
+    };
 
-  npmDepsHash = "sha256-QMlpN0SUd2tHleHQXVOXmaACX7QiBn79MzG1Ir7Y2yU=";
+    npmDepsHash = "sha256-QMlpN0SUd2tHleHQXVOXmaACX7QiBn79MzG1Ir7Y2yU=";
 
-  # npm tarball extracts into "package/".
-  sourceRoot = "package";
+    # npm tarball extracts into "package/".
+    sourceRoot = "package";
 
-  # The npm registry tarball doesn't include package-lock.json.
-  # Copy in the standalone lockfile we committed alongside this file.
-  # Also strip devDependencies — the npm package is pre-built and doesn't
-  # need them at runtime.  Without this, npm install tries to resolve dev
-  # deps from the lockfile even with --omit=dev, causing ENOTCACHED errors
-  # because the prefetched cache only contains production deps.
-  postPatch = ''
-    cp ${./package-lock.json} package-lock.json
-    chmod +w package-lock.json
-    ${lib.getExe nodejs} -e "
-      const fs = require('fs');
-      const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-      delete pkg.devDependencies;
-      fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-    "
-  '';
+    # The npm registry tarball doesn't include package-lock.json.
+    # Copy in the standalone lockfile we committed alongside this file.
+    # Also strip devDependencies — the npm package is pre-built and doesn't
+    # need them at runtime.  Without this, npm install tries to resolve dev
+    # deps from the lockfile even with --omit=dev, causing ENOTCACHED errors
+    # because the prefetched cache only contains production deps.
+    postPatch = ''
+      cp ${./package-lock.json} package-lock.json
+      chmod +w package-lock.json
+      ${lib.getExe nodejs} -e "
+        const fs = require('fs');
+        const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+        delete pkg.devDependencies;
+        fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+      "
+    '';
 
-  # The npm package is pre-built — dist/ already exists.  Skip the default
-  # "npm run build" which would fail (no TypeScript source in the tarball).
-  dontBuild = true;
+    # The npm package is pre-built — dist/ already exists.  Skip the default
+    # "npm run build" which would fail (no TypeScript source in the tarball).
+    dontBuild = true;
 
-  # Only install production dependencies — Pi is pre-built and doesn't
-  # need devDependencies (TypeScript, vitest, etc.) at runtime.
-  npmFlags = [ "--omit=dev" ];
+    # Only install production dependencies — Pi is pre-built and doesn't
+    # need devDependencies (TypeScript, vitest, etc.) at runtime.
+    npmFlags = ["--omit=dev"];
 
-  # Wrap the CLI with node so it works without node on the user's PATH.
-  postInstall = ''
-    rm $out/bin/pi
-    makeWrapper ${lib.getExe nodejs} $out/bin/pi \
-      --add-flags "$out/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js"
-  '';
+    # Wrap the CLI with node so it works without node on the user's PATH.
+    postInstall = ''
+      rm $out/bin/pi
+      makeWrapper ${lib.getExe nodejs} $out/bin/pi \
+        --add-flags "$out/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js"
+    '';
 
-  meta = {
-    description = "Minimal terminal coding agent harness — extensible, multi-provider, tree-structured sessions";
-    homepage = "https://pi.dev";
-    license = lib.licenses.mit;
-    mainProgram = "pi";
-    platforms = lib.platforms.linux ++ lib.platforms.darwin;
-    maintainers = [ lib.maintainers.tryy3 ];
-  };
-}
+    meta = {
+      description = "Minimal terminal coding agent harness — extensible, multi-provider, tree-structured sessions";
+      homepage = "https://pi.dev";
+      license = lib.licenses.mit;
+      mainProgram = "pi";
+      platforms = lib.platforms.linux ++ lib.platforms.darwin;
+      maintainers = [lib.maintainers.tryy3];
+    };
+  }

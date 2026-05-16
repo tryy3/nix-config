@@ -1,9 +1,5 @@
 # FIXME(starter): adjust to you security requirements
-{
-  config,
-  ...
-}:
-{
+{config, ...}: {
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;

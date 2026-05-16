@@ -1,11 +1,9 @@
 # modules/features/git/default.nix
 #
 # Git feature: version control with git.
-{ config, ... }:
-let
+{config, ...}: let
   username = config.hostSpec.username;
-in
-{
+in {
   programs.git.enable = true;
-  home-manager.users.${username}.imports = [ ./home.nix ];
+  home-manager.users.${username}.imports = [./home.nix];
 }

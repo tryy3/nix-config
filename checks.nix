@@ -69,7 +69,13 @@
 
       # ========== shellscripts ==========
       shfmt.enable = true;
-      shellcheck.enable = true;
+      shellcheck = {
+        enable = true;
+        excludes = [
+          "zsh-deep-autocd"
+          "zsh-autols"
+        ];
+      };
 
       end-of-file-fixer.enable = true;
     };

@@ -162,6 +162,25 @@ in
         }
       ];
 
+      displayProfiles = {
+        dwl = {
+          "profile_1778846883414_cfzxbe" = {
+            id = "profile_1778846883414_cfzxbe";
+            name = "Nexer";
+            outputSet = [
+              "DP-10"
+              "DP-11"
+              "eDP-1"
+            ];
+            createdAt = 1778846883414;
+            updatedAt = 1778846883414;
+          };
+        };
+      };
+      activeDisplayProfile = {
+        dwl = "profile_1778846883415_cfzxbe";
+      };
+
       # --- Bar configuration (changed from defaults) ---
       barConfigs = [
         {

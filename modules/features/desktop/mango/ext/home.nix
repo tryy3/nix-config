@@ -10,11 +10,11 @@
 { inputs, ... }:
 {
   imports = [
-    inputs.mango-ext.hmModules.mango
+    inputs.mango-ext.hmModules.mango-ext
     ../common.nix
   ];
 
-  wayland.windowManager.mango.settings = {
+  wayland.windowManager.mango-ext.settings = {
     # ── Canvas (mango-ext) ──────────────────────────────────────────────────
     # A free-form workspace where windows can be placed anywhere, zoomed, and
     # panned. Toggle minimap to see an overview, use overview_toggle for a

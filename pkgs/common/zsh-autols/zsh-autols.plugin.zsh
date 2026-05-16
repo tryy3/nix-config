@@ -1,8 +1,9 @@
+#!/usr/bin/env zsh
 # zsh-autols.plugin.zsh
 # Automatically run ls when changing directories
 
 function _zsh_autols_chpwd() {
-  ls
+	ls
 }
 
 autoload -Uz add-zsh-hook

@@ -12,15 +12,26 @@
 {
   config,
   inputs,
+  pkgs,
   ...
 }:
 let
   username = config.hostSpec.username;
 in
 {
-  imports = [ inputs.mango-ext.nixosModules.mango ];
+  imports = [
+    inputs.mango.nixosModules.mango
+    inputs.mango-ext.nixosModules.mango-ext
+  ];
 
-  programs.mango.enable = true;
+  programs.mango = {
+    enable = false;
+    package = pkgs.runCommand "mango-greeter-shim" { } ''
+      mkdir -p $out/bin
+      ln -s ${config.programs.mango-ext.package}/bin/mango-ext $out/bin/mango
+    '';
+  };
+  programs.mango-ext.enable = true;
 
   home-manager.users.${username}.imports = [ ./home.nix ];
 }

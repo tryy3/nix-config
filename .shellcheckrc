@@ -1,0 +1,3 @@
+# Don't suggest shebang related stuff - problematic for zsh scripts
+disable=SC2148
+disable=SC1071

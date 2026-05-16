@@ -40,6 +40,10 @@
     ../features/tailscale
     ../features/syncthing
 
+    # === AI tools ===
+    ../features/pi
+    ../features/tts
+
     # === AI Stack ===
     ../features/ai-stack/hermes
     ../features/ai-stack/proxy

@@ -78,7 +78,7 @@
     no-window-decoration = true
   '';
 
-  wayland.windowManager.mango = {
+  wayland.windowManager.mango-ext = {
     enable = true;
     settings = {
       # ── Effects ────────────────────────────────────────────────────────────
@@ -242,9 +242,11 @@
       ];
 
       # ── monitor.conf ──────────────────────────────────────────────────────
-      # monitorrule = [
-      #   "name:eDP-1,width:1920,height:1080,refresh:60,x:0,y:10,scale:1,vrr:0,rr:0"
-      # ];
+      monitorrule = [
+        "name:DP-10,width:1920,height:1080,refresh:60,x:0,y:0,scale:0.75,vrr:0,rr:0"
+        "name:DP-11,width:2560,height:1440,refresh:60,x:2560,y:0,scale:1,vrr:0,rr:0"
+        "name:eDP-1,width:2560,height:1600,refresh:165,x:1280,y:1440,scale:1,vrr:0,rr:0"
+      ];
 
       # ── tag.conf ──────────────────────────────────────────────────────────
       tagrule = [
@@ -417,7 +419,8 @@
         "SUPER,l,spawn,dms ipc call lock lock"
         "CTRL+ALT,backslash,spawn,dms ipc call notifications toggle"
         "CTRL+ALT,BackSpace,spawn,dms ipc call notifications clearAll"
-        "SUPER,F1,spawn,dms ipc call keybinds toggle mangowc"
+        # "SUPER,F1,spawn,dms ipc call keybinds toggle mangowc" - for normal mangowc
+        "SUPER,F1,spawn,dms ipc call keybinds toggleWithPath ~/.config/mango-ext/config.conf"
 
         # ── Nix-dev session restore (tag2=terminals, tag3=Zed) ────────────────
         "SUPER+SHIFT,F1,spawn,${config.home.homeDirectory}/.config/mango/scripts/restore-nix-dev.sh"

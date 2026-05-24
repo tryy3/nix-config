@@ -38,6 +38,10 @@ rebuild-trace: rebuild-pre && rebuild-post
   scripts/rebuild.sh trace
   just check
 
+# Update the pi-coding-agent package to a new version
+update-pi VERSION:
+    scripts/update-pi.sh {{VERSION}}
+
 # Update the flake
 update:
   nix flake update

@@ -34,6 +34,9 @@
     # === Gaming ===
     ../features/steam
 
+    # === EDA / Electronics ===
+    ../features/kicad
+
     # === Bluetooth ===
     ../features/bluetooth
 

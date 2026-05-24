@@ -1,58 +1,74 @@
 {
   lib,
-  buildNpmPackage,
+  stdenv,
   fetchurl,
   makeWrapper,
   nodejs,
+  yarn-berry_4,
 }:
 # Strategy: Pi is published as a pre-built npm package with compiled dist/.
-# We avoid building from the monorepo source (workspace resolution, tsgo
-# compilation chain) by fetching the npm registry tarball instead.
+# We fetch the npm registry tarball (no build needed) and use yarn-berry v4
+# to install its runtime dependencies.
 #
-# The npm tarball doesn't include a package-lock.json, so we commit a
-# standalone one (generated with `npm install --package-lock-only`) next
-# to this file.  Update it on version bumps by running:
+# Yarn-berry avoids the npm 10.x integrity-hash bug that affected pi's
+# monorepo sub-packages (pi-agent-core, pi-ai, pi-tui).  The yarn.lock
+# file natively includes all integrity hashes.
 #
-#   cd /tmp && mkdir pi-lockgen && cd pi-lockgen
-#   cat > package.json << 'EOF'
-#   { "name": "gen", "version": "0.0.0", "private": true,
-#     "dependencies": { "@earendil-works/pi-coding-agent": "X.Y.Z" } }
-#   EOF
-#   nix-shell -p nodejs --run "npm install --package-lock-only --legacy-peer-deps"
-#   cp package-lock.json /path/to/pkgs/common/pi-coding-agent/
+# To update, run:
+#
+#   just update-pi <version>
 let
-  version = "0.74.0";
+  yarn-berry = yarn-berry_4;
+  version = "0.75.5";
 in
-  buildNpmPackage rec {
+  stdenv.mkDerivation rec {
     pname = "pi-coding-agent";
     inherit version;
 
     nativeBuildInputs = [
       makeWrapper
       nodejs
+      yarn-berry.yarnBerryConfigHook
     ];
 
     # Pre-built npm package — contains dist/, package.json, docs, examples.
     # No TypeScript compilation needed.
     src = fetchurl {
       url = "https://registry.npmjs.org/@earendil-works/pi-coding-agent/-/pi-coding-agent-${version}.tgz";
-      hash = "sha256-l0pzuWGVvX1jDhFYaey14N16XDo47kkm3JlEhmPUo0Q=";
+      hash = "sha256-iP/3TR/MkzQ+g5qoherLNeiM2quX2sJjaxG+zDskmfw=";
     };
-
-    npmDepsHash = "sha256-QMlpN0SUd2tHleHQXVOXmaACX7QiBn79MzG1Ir7Y2yU=";
 
     # npm tarball extracts into "package/".
     sourceRoot = "package";
 
-    # The npm registry tarball doesn't include package-lock.json.
-    # Copy in the standalone lockfile we committed alongside this file.
-    # Also strip devDependencies — the npm package is pre-built and doesn't
-    # need them at runtime.  Without this, npm install tries to resolve dev
-    # deps from the lockfile even with --omit=dev, causing ENOTCACHED errors
-    # because the prefetched cache only contains production deps.
+    # Yarn-berry fixed-output derivation — downloads all deps from yarn.lock
+    # and validates their integrity hashes.  See yarn.lock + missing-hashes.json
+    # alongside this file.
+    missingHashes = ./missing-hashes.json;
+
+    offlineCache = yarn-berry.fetchYarnBerryDeps {
+      src = ./.;
+      inherit missingHashes;
+      hash = "sha256-PYYoKVCajvOum1lSl+dsWgSPngCLdpLrLkAL0iT3xdg="; # yarn-berry-offlineCache
+    };
+
+    # The npm registry tarball doesn't include yarn.lock — copy in the
+    # standalone one committed alongside this file.  Also remove
+    # npm-shrinkwrap.json (yarn ignores it, but keep the source clean).
+    # Strip devDependencies — the package is pre-built and doesn't need
+    # TypeScript, vitest, etc. at runtime.
+    # Force node-modules linker — Yarn Berry defaults to PnP (.pnp.cjs)
+    # but pi expects a traditional node_modules tree.
     postPatch = ''
-      cp ${./package-lock.json} package-lock.json
-      chmod +w package-lock.json
+      cp ${./yarn.lock} yarn.lock
+      chmod +w yarn.lock
+      rm -f npm-shrinkwrap.json
+
+      # Force Yarn Berry to use the classic node_modules linker
+      cat > .yarnrc.yml << 'YARNRC'
+      nodeLinker: node-modules
+      YARNRC
+
       ${lib.getExe nodejs} -e "
         const fs = require('fs');
         const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
@@ -61,19 +77,29 @@ in
       "
     '';
 
-    # The npm package is pre-built — dist/ already exists.  Skip the default
-    # "npm run build" which would fail (no TypeScript source in the tarball).
+    # The npm package is pre-built — dist/ already exists.
     dontBuild = true;
 
-    # Only install production dependencies — Pi is pre-built and doesn't
-    # need devDependencies (TypeScript, vitest, etc.) at runtime.
-    npmFlags = ["--omit=dev"];
+    # Yarn-berry installs into node_modules in the build directory.
+    # We need to copy the installed dependencies and pi's own files into $out,
+    # then wrap the CLI executable.
+    installPhase = ''
+      runHook preInstall
 
-    # Wrap the CLI with node so it works without node on the user's PATH.
-    postInstall = ''
-      rm $out/bin/pi
+      local dir="$out/lib/node_modules/@earendil-works/pi-coding-agent"
+      mkdir -p "$dir" "$out/bin"
+
+      # Copy pi's own files (matches the "files" list from package.json)
+      cp -r dist docs examples CHANGELOG.md README.md package.json "$dir/"
+
+      # Copy production dependencies installed by yarnBerryConfigHook
+      cp -r node_modules "$dir/"
+
+      # Wrap the CLI with node so it works without node on the user's PATH
       makeWrapper ${lib.getExe nodejs} $out/bin/pi \
-        --add-flags "$out/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js"
+        --add-flags "$dir/dist/cli.js"
+
+      runHook postInstall
     '';
 
     meta = {

@@ -3,7 +3,7 @@
 
   programs.zen-browser = {
     enable = true;
-    setAsDefaultBrowser = true;
+    setAsDefaultBrowser = false;
 
     # =========================================================================
     # POLICIES (system-wide, locked — user cannot override in about:config)

@@ -5,6 +5,7 @@
   imports = [
     ./chromium.nix
     ./firefox.nix
+    ./helium.nix
     ./vesktop.nix
     ./web-apps.nix
     ./zen.nix

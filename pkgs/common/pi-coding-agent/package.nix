@@ -19,7 +19,7 @@
 #   just update-pi <version>
 let
   yarn-berry = yarn-berry_4;
-  version = "0.75.5";
+  version = "0.78.0";
 in
   stdenv.mkDerivation rec {
     pname = "pi-coding-agent";
@@ -35,7 +35,7 @@ in
     # No TypeScript compilation needed.
     src = fetchurl {
       url = "https://registry.npmjs.org/@earendil-works/pi-coding-agent/-/pi-coding-agent-${version}.tgz";
-      hash = "sha256-iP/3TR/MkzQ+g5qoherLNeiM2quX2sJjaxG+zDskmfw=";
+      hash = "sha256-oEfadYAdkTXjaKRxHQbQyktqtwiAGrgv0TZt3h7t0O4=";
     };
 
     # npm tarball extracts into "package/".
@@ -49,7 +49,7 @@ in
     offlineCache = yarn-berry.fetchYarnBerryDeps {
       src = ./.;
       inherit missingHashes;
-      hash = "sha256-PYYoKVCajvOum1lSl+dsWgSPngCLdpLrLkAL0iT3xdg="; # yarn-berry-offlineCache
+      hash = "sha256-tNbRI9o8FAwaM066jTM+VvKXybLvHYl7j3MNjxYN7WE="; # yarn-berry-offlineCache
     };
 
     # The npm registry tarball doesn't include yarn.lock — copy in the

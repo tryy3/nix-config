@@ -411,7 +411,7 @@
         "none,XF86MonBrightnessDown,spawn,dms ipc call brightness decrement 5"
 
         # custom app binds
-        "SUPER,Return,spawn,zen-twilight"
+        "SUPER,Return,spawn,helium"
         "SUPER,d,spawn,vesktop"
         "SUPER,e,spawn,obsidian"
         "SUPER,y,spawn,spotify-web"

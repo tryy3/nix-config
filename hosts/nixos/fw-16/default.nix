@@ -81,7 +81,6 @@
       "systemd-resume.target"
     ];
     after = [
-      "network-online.target"
       "systemd-resume.service"
     ];
   };

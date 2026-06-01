@@ -52,7 +52,7 @@
         tldr
         httpie
         zoxide
-        neofetch
+        fastfetch
         wget
         zellij
         podman

@@ -4,7 +4,7 @@
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    settings = {
       "*" = {
         # Avoids infinite hang if control socket connection interrupted. ex: vpn goes down/up
         serverAliveCountMax = 3;

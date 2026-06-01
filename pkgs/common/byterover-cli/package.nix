@@ -21,7 +21,7 @@ in
     # `hash` together when upgrading.
     src = fetchurl {
       url = "https://storage.googleapis.com/brv-releases/channels/stable/brv-linux-x64.tar.gz";
-      hash = "sha256-nYWf3+xmbLZiMfPMC76kDTFmWfURv+XX7S38Tb8NN8k=";
+      hash = "sha256-V3EVPa6XGqFFJ5FtI486lwtbAKULVHwZw1Tz+oRbRu4=";
     };
 
     sourceRoot = "brv";

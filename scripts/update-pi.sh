@@ -54,9 +54,13 @@ cat >package.json <<EOF
 }
 EOF
 
-# Use yarn-berry from nixpkgs (yarn 4.x) to generate a v4 yarn.lock.
+# Resolve the flake's pinned nixpkgs (NOT system channel) so the yarn.lock
+# format matches the yarn-berry version used at build time.
+NIXPKGS="$(nix eval --impure --expr 'let f = builtins.getFlake (toString ./..); in f.inputs.nixpkgs.outPath' --raw)"
+
+# Use yarn-berry from the flake's nixpkgs (yarn 4.x) to generate a v4 yarn.lock.
 # --mode=update-lockfile skips linking node_modules, producing only the lockfile.
-nix shell nixpkgs#nodejs nixpkgs#yarn-berry_4 -c \
+nix shell "$NIXPKGS#nodejs" "$NIXPKGS#yarn-berry_4" -c \
 	yarn install --mode=update-lockfile
 
 cp yarn.lock "$YARN_LOCK"
@@ -68,13 +72,13 @@ green "yarn.lock written to $YARN_LOCK"
 # optional deps that need this.  The yarn-berry-fetcher queries the registry
 # for the missing hashes.
 green "Generating missing-hashes.json ..."
-nix run nixpkgs#yarn-berry_4.yarn-berry-fetcher -- \
+nix run "$NIXPKGS#yarn-berry_4.yarn-berry-fetcher" -- \
 	missing-hashes "$YARN_LOCK" >"$MISSING_HASHES"
 green "missing-hashes.json written to $MISSING_HASHES"
 
 # --- 3. Pre-compute offlineCache hash ---
 green "Computing offlineCache hash with yarn-berry-fetcher prefetch ..."
-HASH=$(nix run nixpkgs#yarn-berry_4.yarn-berry-fetcher -- \
+HASH=$(nix run "$NIXPKGS#yarn-berry_4.yarn-berry-fetcher" -- \
 	prefetch "$YARN_LOCK" "$MISSING_HASHES" 2>/dev/null || true)
 if [ -n "$HASH" ]; then
 	sed -i "s|hash = \"sha256-[^\"]*\"; # yarn-berry-offlineCache|hash = \"$HASH\"; # yarn-berry-offlineCache|" "$PACKAGE_NIX"

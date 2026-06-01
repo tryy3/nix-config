@@ -49,7 +49,7 @@ in
     offlineCache = yarn-berry.fetchYarnBerryDeps {
       src = ./.;
       inherit missingHashes;
-      hash = "sha256-tNbRI9o8FAwaM066jTM+VvKXybLvHYl7j3MNjxYN7WE="; # yarn-berry-offlineCache
+      hash = "sha256-m4Fa8snEHE+aHFXEVAw4FlVhk/YdBtE6dwBFHTsJVjo="; # yarn-berry-offlineCache — user rebuild needed to get real hash
     };
 
     # The npm registry tarball doesn't include yarn.lock — copy in the
@@ -64,9 +64,11 @@ in
       chmod +w yarn.lock
       rm -f npm-shrinkwrap.json
 
-      # Force Yarn Berry to use the classic node_modules linker
+      # Force Yarn Berry to use the classic node_modules linker.
+      # Disable network access — all deps must be in the offline cache.
       cat > .yarnrc.yml << 'YARNRC'
       nodeLinker: node-modules
+      enableNetwork: false
       YARNRC
 
       ${lib.getExe nodejs} -e "

@@ -96,24 +96,24 @@
 
   boot.initrd.systemd.enable = true;
   boot.kernelParams = ["amdgpu.abmlevel=0"];
-  # boot.kernelPackages = pkgs.linuxPackages_7_0;
+  boot.kernelPackages = pkgs.linuxPackages_7_0;
 
   # ── Pin kernel to 7.0.6 (Bluetooth regression in 7.0.7+) ────────────
   # The btusb/MediaTek MT7925 driver broke in 7.0.7 and the nixpkgs
   # 7.0.9 doesn't yet carry the full fix. Pin to the last known good
   # version until upstream completes the backport.
-  boot.kernelPackages = let
-    linux_7_0_6 = pkgs.buildLinux {
-      version = "7.0.6";
-      modDirVersion = "7.0.6";
-      src = pkgs.fetchurl {
-        url = "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.0.6.tar.xz";
-        hash = "sha256-y6REQKpXr/18ISQdxbwjSw31PEmfj/w+vCkN0zkKdSM=";
-      };
-      kernelPatches = pkgs.linux_7_0.kernelPatches;
-    };
-  in
-    pkgs.linuxPackagesFor linux_7_0_6;
+  # boot.kernelPackages = let
+  #   linux_7_0_6 = pkgs.buildLinux {
+  #     version = "7.0.6";
+  #     modDirVersion = "7.0.6";
+  #     src = pkgs.fetchurl {
+  #       url = "https://cdn.kernel.org/pub/linux/kernel/v7.x/linux-7.0.6.tar.xz";
+  #       hash = "sha256-y6REQKpXr/18ISQdxbwjSw31PEmfj/w+vCkN0zkKdSM=";
+  #     };
+  #     kernelPatches = pkgs.linux_7_0.kernelPatches;
+  #   };
+  # in
+  #   pkgs.linuxPackagesFor linux_7_0_6;
 
   # Swedish keyboard (TTY only; Wayland keyboard is configured in the compositor)
   console.keyMap = "sv-latin1";
@@ -126,4 +126,7 @@
 
   # https://wiki.nixos.org/wiki/FAQ/When_do_I_update_stateVersion
   system.stateVersion = "24.11";
+
+  # temporarily disable nixos documentation
+  documentation.nixos.enable = false;
 }

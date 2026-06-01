@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   gtk = {
     enable = true;
     theme = {
@@ -15,6 +19,7 @@
     gtk4.extraConfig = {
       gtk-application-prefer-dark-theme = true;
     };
+    gtk4.theme = config.gtk.theme;
   };
 
   # Ensure Qt apps also use dark theme

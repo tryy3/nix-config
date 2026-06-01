@@ -61,6 +61,9 @@ in {
   nixpkgs = {
     overlays = [outputs.overlays.default];
     config.allowUnfree = true;
+    config.permittedInsecurePackages = [
+      "electron-39.8.10"
+    ];
   };
 
   # === Nix settings ===
